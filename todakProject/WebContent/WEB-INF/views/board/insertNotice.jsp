@@ -155,12 +155,13 @@
 	
 	%>
 			<div id="boardTit" align = "center"><h3>글쓰기</h3></div>
-			<div align = "center">
+			<div align="center">
 				<form id="n_writeForm" name="n_writeForm" enctype="multipart/form-data">
 					<table id="boardWrite" >
 						<tr>
-							<td>작성자</td>
-							<td><input type="text" name="hm_name" id="hm_name" value="<%=hm_name%>" readonly>
+							<td width="600">작성자</td>
+							<td><b><%=hm_name%></b>
+							<input type="hidden" name="hm_name" id="hm_name" value="<%=hm_name%>">
 							<input type="hidden" name="hm_duty" id="hm_duty" value="<%=hm_duty %>">
 							<input type="hidden" name="hm_deptnum" id="hm_deptnum" value="<%=hm_deptnum %>">
 							<input type="hidden" name="hm_empnum" id="hm_empnum" value="<%=hm_empnum %>">
@@ -190,7 +191,7 @@
 						</tr>
 						<tr>
 							<td>글제목</td>
-							<td><input type="text" name="bn_title" id="bn_title" size="80"></td>
+							<td><input type="text" name="bn_title" id="bn_title" size="65"></td>
 						</tr>
 						<tr>
 							<td>내용</td>

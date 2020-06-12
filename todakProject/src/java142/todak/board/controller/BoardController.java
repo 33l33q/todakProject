@@ -38,8 +38,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class BoardController {
    
    
-   final static String FILEPATH1 =  "//home//ec2-user//tomcatt//webapps//todakProject//upload//board//notice";
-   final static String FILEPATH2 =  "//home//ec2-user//tomcatt//webapps//todakProject//upload//board//suggestion";
+//   final static String FILEPATH1 =  "//home//ec2-user//tomcatt//webapps//todakProject//upload//board//notice";
+//   final static String FILEPATH2 =  "//home//ec2-user//tomcatt//webapps//todakProject//upload//board//suggestion";
+   final static String FILEPATH1 =  "C://Users//BEE//Desktop//finalProject//todakProject//WebContent//upload//board//notice";
+   final static String FILEPATH2 =  "C://Users//BEE//Desktop//finalProject//todakProject//WebContent//upload//board//suggestion";
    final static String DOWNLOADPATH1 = "upload/board/notice/";
    final static String DOWNLOADPATH2 = "upload/board/suggestion/";
    final static String NOTICE_GUBUN = "N";
@@ -768,7 +770,7 @@ public class BoardController {
          
          if(secondFile == null && firstFile != null){
             
-            nvo.setBn_image(DOWNLOADPATH2 + firstFile);
+            nvo.setBn_image(DOWNLOADPATH1 + firstFile);
             nvo.setBn_file("");
             //logger.info("1.파일명 >>> : " +  nvo.getBn_file());
             //logger.info("1.이미지명 >>> : " +  nvo.getBn_image());

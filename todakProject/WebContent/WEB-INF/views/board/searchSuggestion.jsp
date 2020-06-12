@@ -303,7 +303,7 @@
 			
 							<tr class="ctr">
 								<td class="ac" style="border-right:2px solid #eeeeee;" align="center"><b>첨부사진</b></td>
-								<td><img src="../<%=svo.getBs_image() %>" border=0></td>					
+								<td><img src="../<%=svo.getBs_image() %>" border=0  style="max-width:90%;"></td>					
 								<td align="center">
 									<input type="button" class="button" id="fileDown" 
 										   name="fileDown" value="이미지 다운로드">

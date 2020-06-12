@@ -121,21 +121,21 @@
 				<form id="su_writeForm" name="su_writeForm" enctype="multipart/form-data" type="post">
 					<table id="boardWrite" >
 						<tr>
-							<td>글제목</td>
+							<td width="600">글제목</td>
 							<td><input type="text" name="bs_title" id="bs_title" size="80"></td>
 							<td><input type="hidden" name="hm_empnum" id="hm_empnum" value="<%=hm_empnum %>"></td>
 						</tr>
 						<tr>
 							<td>내용</td>
 							<td height="200" width="800">
-							<textarea name="bs_content" id="bs_content" rows="10" cols="70"></textarea></td>
+							<textarea name="bs_content" id="bs_content" rows="10" cols="65"></textarea></td>
 						</tr>
 						<tr>
 							<td>첨부파일</td>
 							<td><input type="file" name="bs_image" id="bs_image"></td>
 						</tr>
 					</table>
-					<table align = "center">
+					<table align="center">
 						<tr align="right">
 
 								<input align = "right" type="button" value="저장" class="but" id="insertSuggestion" name="insertSuggestion" />

@@ -173,7 +173,7 @@
    
                <tr class="ctr">
                   <td class="ac" style="border-right:2px solid #eeeeee;" align="center"><b>첨부사진</b></td>
-                  <td colspan="5"><img src="../<%=nvo.getBn_image() %>" border=0></td>               
+                  <td colspan="5"><img src="../<%=nvo.getBn_image() %>" border=0  style="max-width:90%;"></td>               
                </tr>
    <%
                }

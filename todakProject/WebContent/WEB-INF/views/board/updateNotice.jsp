@@ -180,8 +180,8 @@
 	%>
 						<tr>
 							<td>이미지</td>
-							<td><img src="../<%=bn_image%>">
-							<input type="file" name="bn_image" id="bn_image" value="<%=nvo.getBn_image()%>"></td>
+							<td><img src="../<%=bn_image%>" style="max-width:90%;">
+							<input type="file" name="bn_image" id="bn_image" value="<%=nvo.getBn_image()%> "></td>
 						</tr>
 	<%
 					}else{
