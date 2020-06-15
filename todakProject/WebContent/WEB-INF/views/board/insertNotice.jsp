@@ -207,8 +207,8 @@
 							<td><input type="file" name="bn_file" id="bn_file"></td>
 						</tr>
 					</table>
-						<input align = "right" type="button" value="저장" class="but" id="insertNotice" name="insertNotice" />
-						<input align = "right" type="button" value="목록" class="but" id="selectNotice" name="selectNotice"/>
+						<input type="button" value="저장" class="but" id="insertNotice" name="insertNotice" />
+						<input type="button" value="목록" class="but" id="selectNotice" name="selectNotice"/>
 				</form>
 			</div>
          </div>

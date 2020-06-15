@@ -14,7 +14,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>파일 다운로드 중이당</title>
+		<title>파일 다운로드 </title>
 	</head>
 	<body>
 		<header class="header"> 
@@ -39,8 +39,6 @@
 				
 				FileReadUtil fru = new FileReadUtil();
 				fru.readFile(request, response);
-				
-				
 	
 	%>
          

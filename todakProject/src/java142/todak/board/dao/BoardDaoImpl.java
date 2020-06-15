@@ -84,7 +84,7 @@ public class BoardDaoImpl implements BoardDao {
 		return session.selectList("checkList", ncvo);
 	}
 
-	/******************���⼭���� ���ǻ����Ѵٳ�**************************/
+	/******************건의사항게시판**************************/
 	
 	@Override
 	public List<SuggestionVO> selectSuggestion(SuggestionVO svo) {
@@ -127,7 +127,7 @@ public class BoardDaoImpl implements BoardDao {
 	}
 
 	
-	/******************���⼭���� ���ǻ��״��**************************/
+	/******************건의사항 게시판 댓글**************************/
 	
 	@Override
 	public List<SuReplyVO> selectSuReply(SuReplyVO srvo) {
@@ -160,7 +160,7 @@ public class BoardDaoImpl implements BoardDao {
 	}
 
 	
-	/******************���⼭���� ���ǻ��� ���ƿ�**************************/
+	/*****************건의사항 게시판 추비추**************************/
 	
 	@Override
 	public List<SuLikeVO> chaebunSuLike() {

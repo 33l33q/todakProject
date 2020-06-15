@@ -193,7 +193,7 @@
                                     <option value="bs_title">제목</option>
                                     <option value="bs_content">내용</option>
                                  </select>
-                                 <input type="text" name="keyword" id="keyword" value="검색어를 입력하세요" />
+                                 <input type="text" name="keyword" id="keyword" placeholder="검색어를 입력하세요" />
                                  <input type="button" value="검색" class="button" style="width:40px;" name="findSuggestion" id="findSuggestion"/>
                                  <input type="hidden" name="hm_empnum" value="<%=user_ID%>">
                               </td>

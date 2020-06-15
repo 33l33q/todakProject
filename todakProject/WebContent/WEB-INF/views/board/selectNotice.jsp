@@ -18,8 +18,8 @@
       Object obj2 = request.getAttribute("i_nvo");
       NoticeVO pvo =(NoticeVO) obj2; //pvo ==> pageVO
       
-      String key = pvo.getKeyword();//검색을위한 변수 받아옵니다.
-      String index = pvo.getFindIndex();//검색을 위한 변수 받아옵니다.
+      String key = pvo.getKeyword();//검색 변수
+      String index = pvo.getFindIndex();//페이징 변수
       
       int Size = pvo.getPageSize();
       int pageSize = pvo.getPageSize();
@@ -62,7 +62,6 @@
              $("#findIndex").val(findIndex);
              
              if(keyword == "전체" && findIndex == ("bn_divnum" || "bn_deptnum")){
-                console.log("전체를 기타로 인식하기");
                 $("#keyword").val("기타");
              }
              
@@ -172,10 +171,7 @@
                   <input type="hidden" name="hm_empnum" value="<%=user_ID%>">   
                   <input type="hidden" name="findIndex" value="hm_empnum" >
 <%
-
-               
                   String findIndex = (String)request.getAttribute("findIndex");
-                  //System.out.println("findIndex >>> : " + findIndex);
                   if(findIndex==null){
 %>
                      <input type="checkbox" id="selectCheck"   name="selectCheck">
@@ -193,7 +189,6 @@
             </div>
                      <%-- ==================검색 기능 시작=================== --%>
                <div class="table_align" id="noticeSearch">
-               
                   <form id="no_search" name="no_search" align ="left">
                         <table summary ="검색">
                            <colgroup>
@@ -211,7 +206,7 @@
                                     <option value="bn_deptnum">부서</option>
                                     <option value="bn_divnum">본부</option>
                                  </select>
-                                 <input type="text" name="keyword" id="keyword" value="검색어를 입력하세요" />
+                                 <input type="text" name="keyword" id="keyword" placeholder="검색어를 입력하세요" />
                                  <input type="button" class="button" style="width:40px" value="검색" name="findNotice" id="findNotice"/>
                                  <input type="hidden" name="hm_empnum" value="<%=user_ID%>">
                               </td>
@@ -256,7 +251,6 @@
             <%
                     Object obj = request.getAttribute("noticeList");
                   ArrayList<NoticeVO> sList = (ArrayList<NoticeVO>)obj;
-                  //System.out.println("sList.size() >>> : " + sList.size());
                   if(sList.size() == 0 ){
             %>
                               <tr>
@@ -301,11 +295,7 @@
                   String hm_duty = mvo.getHm_duty();
                   String hm_deptnum = mvo.getHm_deptnum();
                   String hm_name =  mvo.getHm_name();
-                  
-                  //System.out.println("hm_duty >>> : " + hm_duty);
-                  //System.out.println("hm_deptnum >>> : " + hm_deptnum);
-                  //System.out.println("hm_name >>> : " + hm_name);
-                  
+
                   
                   if(!(hm_duty.equals("73")||hm_duty.equals("67"))){
    

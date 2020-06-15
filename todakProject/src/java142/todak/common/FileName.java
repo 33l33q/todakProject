@@ -1,15 +1,21 @@
 package java142.todak.common;
 
 import java.io.File;
+import java142.todak.ework.controller.EworkController;
+
+import org.apache.log4j.Logger;
 
 import com.oreilly.servlet.multipart.FileRenamePolicy;
 
 public class FileName implements FileRenamePolicy {
+	
+	static Logger logger = Logger.getLogger(FileName.class);
+	
 	public FileName(){}
 	
 	public File rename(File sf){
 		String f = sf.getName();
-		//System.out.println("fileName >>> : " + f);
+		logger.info("fileName >>> : " + f);
 		
 		try {
 			String t = f;
@@ -24,10 +30,8 @@ public class FileName implements FileRenamePolicy {
 			}
 			
 		}catch(Exception e){
-			//System.out.println(" BabyFileName.rename() ===> : " + e);
+			logger.info("FileName.rename() ===> : " + e);
 		}
-		
 		return sf;
 	}
-
 }

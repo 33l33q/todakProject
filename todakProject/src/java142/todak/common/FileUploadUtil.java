@@ -27,13 +27,13 @@ public class FileUploadUtil {
                                      ,"UTF-8"
                                      ,new FileName());
 			
-//			request.setCharacterEncoding("UTF-8");
+//			request.setCharacterEncoding("UTF-8"); --인코딩 타입 바꾸면서 필요 없어짐
 			
 			return fb = true;
 			
 			
 		}catch(Exception e){
-			//System.out.println("FileUploadUtil.fileUpldad() >>> : " + e);
+			System.out.println("FileUploadUtil.fileUpldad() >>> : " + e);
 		}
 		
 		return fb;		
@@ -51,7 +51,7 @@ public class FileUploadUtil {
 		while (en.hasMoreElements())
 		{
 			String f = en.nextElement().toString();
-			//logger.info("f Ȯ�ο� >>> :" + f);
+			logger.info("f 파일명 >> :" + f);
 			v.add(m.getFilesystemName(f));
 		}
 		
