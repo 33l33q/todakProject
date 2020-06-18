@@ -5,8 +5,8 @@
  - 목적 : 주 52시간 탄력근무제를 기반으로한 단체를 대상으로 한 그룹웨어 제작 
  - 구조 :  Spring Framework
  - 담당 기능 : 게시판 글 및 댓글 CRUD(입력, 수정, 삭제, 전체조회, 검색, like검색) 및 출퇴근 등록
+ ![슬라이드19](https://user-images.githubusercontent.com/62315622/84861319-b7563d80-b0ab-11ea-9bd2-f81b7a11dc53.PNG)
  - 담당 업무 : 통합, 전체 CSS 총괄
-![슬라이드19](https://user-images.githubusercontent.com/62315622/84861319-b7563d80-b0ab-11ea-9bd2-f81b7a11dc53.PNG)
  - 제작 기간 : 총 9주 (2020.01.17 ~2020.03.27)
  - 제작 일정
       일정	|	작업내역	|
