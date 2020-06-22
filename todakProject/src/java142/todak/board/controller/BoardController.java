@@ -633,7 +633,8 @@ public class BoardController {
    
    //공지사항 게시글 목록  및 검색
    @RequestMapping("/selectNotice") 
-   public String selectBoardNotice(@ModelAttribute NoticeVO nvo, MemberVO mvo, Model model, HttpServletRequest request ) {
+   public String selectBoardNotice(@ModelAttribute NoticeVO nvo, MemberVO mvo, Model model, 
+		   														HttpServletRequest request ) {
       
       logger.info("(log)BoardController.selectNotice 시작 >>> ");
       LoginSession sManager = LoginSession.getInstance();
@@ -678,39 +679,39 @@ public class BoardController {
       List<MemberVO> writerQualified = null;
       writerQualified =  boardService.selectWrite(i_mvo);
       
+      //가져온 정보를 _mvo에 담아서 관리함
       MemberVO _mvo = writerQualified.get(0);
       String check_empnum = _mvo.getHm_empnum();
       nvo.setCheck_empnum(check_empnum);
       
       String c_hm_deptnum = _mvo.getHm_deptnum();
       logger.info("부서번호 받아오기" + c_hm_deptnum);
+      
+      //회원번호를 통해 받아온 부서번호를 부서번호 생성규칙에 의거해 부서코드와 팀코드로 분할해서 저장
       String check_divnum = c_hm_deptnum.substring(0, 2);
       String check_deptnum = "";
       
       if(c_hm_deptnum.length() > 2) check_deptnum = c_hm_deptnum.substring(2, 4);
-      else check_deptnum = "98";
+      else check_deptnum = "98"; //소속 팀이 없는 경우 기타 값을 넣음
       
       logger.info("check_divnum >>> : " + check_divnum);
       logger.info("check_deptnum >>> : " + check_deptnum);
    
       if(findIndex == null) nvo =  new NoticeVO();
    
-      //admin계정에 무조건 권한주기
+      //admin계정으로 로그인한 경우 모든 게시글을 볼 수 있도록 조정함
       if(hm_empnum.equals("H000000000000")) {
          nvo.setFindIndex("admin");
          logger.info("FindIndex == " + nvo.getFindIndex());
       }else{
          nvo.setCheck_divnum(check_divnum);
          nvo.setCheck_deptnum(check_deptnum);
-         
       }
       
       logger.info("로그인한 사람의 부서 정보 가져오기  >>> : " + nvo.getCheck_divnum() +  " " + nvo.getCheck_deptnum());
-      
-      logger.info("cPage >>>> " + cPage);
+      logger.info("cPage >>>> " + cPage);//페이징 정보 출력
          
-      Paging.setPage(nvo,cPage,pageCtrl);//페이징할 정보를 Paging클래스에 보내줍니다
-      
+      Paging.setPage(nvo,cPage,pageCtrl);//페이징 정보를 해당 클래스에 전송함
       
       List<NoticeVO> noticeSelectList = null;
       noticeSelectList = boardService.selectNotice(nvo);
@@ -721,7 +722,6 @@ public class BoardController {
           }
       nvo.setN_hm_empnum(hm_empnum);
           
-      
       model.addAttribute("noticeList", noticeSelectList);
       model.addAttribute("writerQualified", writerQualified);
       model.addAttribute("i_nvo",nvo);

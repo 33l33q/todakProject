@@ -17,18 +17,18 @@ public interface BoardService {
 	public int deleteNotice(NoticeVO nvo);
 	public int updateNoticeHit(NoticeVO nvo);
 	
-	//�۾��� ���Ѻ���
+	//글쓰기 권한(부서 번호 조회)
 	public List<MemberVO> selectWrite(MemberVO mvo);
 	
-	//�������� �ۼ��� ä��
+	//채번
 	public List<NoticeVO> chaebunNotice();
 	
-	//---------------------------Ȯ�ι�ư------------------------------
+	//---------------------------공지사항 확인------------------------------
 	public int checkNotice(NoCheckVO ncvo);
 	public List<NoCheckVO> checkList(NoCheckVO ncvo);
 	public List<NoCheckVO> chaebunNoCheck(); 
 	
-	//---------------------------���ǻ��װԽ���------------------------------
+	//---------------------------건의사항---------------------------------
 	public List<SuggestionVO> selectSuggestion(SuggestionVO svo);
 	public List<SuggestionVO> searchSuggestion(SuggestionVO svo);
 	public List<SuggestionVO> cheabunSuggestion();
@@ -37,7 +37,7 @@ public interface BoardService {
 	public int updateSuggestion(SuggestionVO svo);
 	public int deleteSuggestion(SuggestionVO svo);
 	
-	/*���ǻ��� ���*/
+	//---------------------------건의사항 댓글-------------------------------
 	
 	public List<SuReplyVO> selectSuReply(SuReplyVO srvo);
 	public List<SuReplyVO> chaebunSuReply();
@@ -45,7 +45,7 @@ public interface BoardService {
 	public int updateSuReply(SuReplyVO srvo);
 	public int deleteSuReply(SuReplyVO srvo);
 	
-	/*���ǻ��� ���ƿ�*/
+	//---------------------------건의사항 좋아요------------------------------
 	
 	public List<SuLikeVO> chaebunSuLike();
 	
