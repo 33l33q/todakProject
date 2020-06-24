@@ -47,7 +47,15 @@ public class SchedulerController {
 	// 휴가사용 날짜기록 테이블
 	private static final String GUBUN_HUMANHDATE = "T";
 	
-	/*--------------------------------------근태코드 시작 끝-------------------------------------*/
+	/*--------------------------------------근태코드 시작 -------------------------------------*/
+	
+	/* 탄력근무제로 무조건 평일에 출근을 해야하며
+	 * 주 40시간 근무 필수
+	 * 출근은 하루 한 번만 가능,퇴근은 여러번 등록 가능함
+	 * 최대 초과 근무 시간은 720시간으로 2400시간을 사용하면 초과근무시간이 깎이는 구조
+	 * 스케줄러 어노테이션 사용이 불가해 특정 시간에 모든 사용자 정보를 넣는 것이 아니라
+	 * 가장 먼저 출근한 사람이 출근 기록시에 모든 사용자 직원의 해당날짜 출퇴근 정보가 기록됨(배치)
+	 * */
 	
 	@Autowired
 	private PlatformTransactionManager ptm;
@@ -67,16 +75,16 @@ public class SchedulerController {
 	      String hc_totalhour = "";
 	      String hc_extraworking = "";
 	      
-	      /*찬영씌한테 값 받아와야해~~~ 실제 근무 일수*/
-	      hc_lasthour = "2400";
-	      hc_totalhour = "2400";
+	      /*주 5일를 기준으로한 한주의 총근 무 시간*/
+	      hc_lasthour = "2400"; //남은시간
+	      hc_totalhour = "2400"; //한 주 총 근무 시간
 	      
-	      
+	      //날짜 불러오기 -> 월요일일때와 다른 요일일때 들어가는 정보값이 다르기 때문에
 	      Calendar cd = Calendar.getInstance();
 	      int today = cd.get(Calendar.DAY_OF_WEEK);
 	      logger.info("today >>> " + today); 
 	      
-	      
+	      //트랜젝션처리
 	      boolean insertTAndAResult = false;
 	      boolean insertCommuteResult = false;
 	      boolean insertLastHourResult = false;
@@ -88,9 +96,10 @@ public class SchedulerController {
 	      try{
 	         
 	         List<CommuteVO> cheabunList = null;
-	         cheabunList = schedulerService.selectCheabun(cvo);
+	         cheabunList = schedulerService.selectCheabun(cvo);//채번
+	         
 	         if(cheabunList.size() == 0){
-	            //default값 넣을거야
+	            //default값 배치 함수로 넣어주기
 	            logger.info("전체데이터넣는중");
 	            cvo.setToday(today);
 	            cvo.setHc_lasthour(hc_lasthour);
@@ -200,7 +209,7 @@ public class SchedulerController {
 					cvo.setHc_dayhour(Integer.toString(todayWorkHour));
 					logger.info("오늘 근무한 시간 확인하기~~~ >> todayWorkHour" + todayWorkHour);
 		
-					//월요일이 아닌경우에만~!
+					//월요일이 아닌경우에만~! --> 월요일은 지난 초과근무시간이 존재하지 않기 때문에
 					if(today != 2){
 					
 						//어제까지의 초과근무시간 구해오기
