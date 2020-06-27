@@ -131,7 +131,7 @@ public class BoardServiceImpl implements BoardService {
 
 	 
 	
-	//---------------------------���ǻ��װԽ���------------------------------
+	//---------------------------건의사항------------------------------
 	
 	@Override
 	public List<SuggestionVO> selectSuggestion(SuggestionVO svo) {
@@ -241,7 +241,7 @@ public class BoardServiceImpl implements BoardService {
 		return iFlag;
 	}
 	
-	//------------------------���ǻ��� ���ƿ�------------------------
+	//------------------------건의사항 댓글 및 추비추------------------------
 	
 	@Override
 	public List<SuLikeVO> chaebunSuLike() {

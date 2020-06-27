@@ -718,7 +718,7 @@ public class BoardController {
       
          if(noticeSelectList.size() != 0){
              totalCnt=noticeSelectList.get(0).getTotalCount();//쿼리 조회한 리스트의 0번 인덱스에 담긴 totalCount값을 받아서 
-             nvo.setTotalCount(totalCnt);//vo에 담아줍니다.
+             nvo.setTotalCount(totalCnt);//vo에 담는다
           }
       nvo.setN_hm_empnum(hm_empnum);
           
