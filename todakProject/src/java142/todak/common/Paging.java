@@ -7,7 +7,7 @@ public class Paging {
 	
 public static void setPage(CodeVO cvo, String curpage, String sizeCtrl){
 		
-		if(curpage==null) cvo.setCurPage(1);//ù ȭ�� �� ������ ���� 1�������� �����մϴ�.
+		if(curpage==null) cvo.setCurPage(1); 	
 
 		if(curpage!=null){
 			int curnum=Integer.parseInt(curpage);

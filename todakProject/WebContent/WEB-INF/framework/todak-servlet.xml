@@ -16,10 +16,8 @@
 	   	<context:annotation-config />
 	   	<mvc:annotation-driven />
 	   	
-	   	<!-- 어노테이션으로 표시된 클래스를 자동으로 가져오는 기능 (클래스 검색을 실시할 대상 패키지 지정) -->
 	   	<context:component-scan base-package="java142.todak.**" />
 	   	
-	   	<!-- 논리적인 뷰를 실제 뷰로 변환하는 기능 -->
 	   	<bean id="viewResolver"
 	   		  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 	   		<property name="prefix" value="/WEB-INF/views/" />

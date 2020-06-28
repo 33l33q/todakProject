@@ -21,10 +21,10 @@ public class BoardDaoImpl implements BoardDao {
 	private SqlSession session;
 
 	@Override
-	public List<NoticeVO> listNotice(NoticeVO nvo) {
-		// TODO Auto-generated method stub
-		return  session.selectList("listNotice");
+	public List<NoticeVO> selectNotice(NoticeVO nvo) {
+		return  session.selectList("selectNotice");
 	}
+	
 	
 	@Override
 	public List<NoticeVO> searchNotice(NoticeVO nvo){
@@ -32,44 +32,42 @@ public class BoardDaoImpl implements BoardDao {
 	}
 	
 	@Override
-	public int updateNoticeHit(NoticeVO nvo){
-		
-		return (int)session.insert("updateNoticeHit");
-		
+	public List<NoticeVO> searchWrite(NoticeVO nvo){
+		return  session.selectList("searchWrite");
 	}
+	
+	@Override
+	public int updateNoticeHit(NoticeVO nvo){
+		return (int)session.insert("updateNoticeHit");
+	}
+	
 	@Override
 	public int insertNotice(NoticeVO nvo) {
-		// TODO Auto-generated method stub
 		return (int)session.insert("insertNotice");
 	}
 
 	@Override
 	public List<NoticeVO> chaebunNotice() {
-		// TODO Auto-generated method stub
 		return session.selectList("chaebunNotice");
 	}
 
 	@Override
 	public int updateNotice(NoticeVO nvo) {
-		// TODO Auto-generated method stub
 		return (int)session.update("updateNotice");
 	}
 
 	@Override
 	public int deleteNotice(NoticeVO nvo) {
-		// TODO Auto-generated method stub
 		return (int)session.update("selectNotice");
 	}
 
 	@Override
 	public List<MemberVO> selectWrite(MemberVO mvo) {
-		// TODO Auto-generated method stub
 		return session.selectOne("selectWrite", mvo);
 	}
 
 	@Override
 	public int checkNotice(NoCheckVO ncvo){
-		// TODO Auto-generated method stub
 		return (int)session.insert("checkNotice", ncvo);
 	}
 
@@ -80,7 +78,6 @@ public class BoardDaoImpl implements BoardDao {
 
 	@Override
 	public List<NoCheckVO> checkList(NoCheckVO ncvo) {
-		// TODO Auto-generated method stub
 		return session.selectList("checkList", ncvo);
 	}
 
@@ -88,13 +85,11 @@ public class BoardDaoImpl implements BoardDao {
 	
 	@Override
 	public List<SuggestionVO> selectSuggestion(SuggestionVO svo) {
-		// TODO Auto-generated method stub
 		return session.selectList("selectSuggestion");
 	}
 
 	@Override
 	public List<SuggestionVO> searchSuggestion(SuggestionVO svo) {
-		// TODO Auto-generated method stub
 		return session.selectList("searchSuggestion");
 	}
 	@Override
@@ -104,25 +99,21 @@ public class BoardDaoImpl implements BoardDao {
 	
 	@Override
 	public List<SuggestionVO> chaebunSuggestion() {
-		// TODO Auto-generated method stub
 		return session.selectList("chaebunSuggestion");
 	}
 
 	@Override
 	public int insertSuggestion(SuggestionVO svo) {
-		// TODO Auto-generated method stub
 		return(int)session.insert("insertSuggestion");
 	}
 
 	@Override
 	public int updateSuggestion(SuggestionVO svo) {
-		// TODO Auto-generated method stub
 		return (int)session.update("updateSuggestion");
 	}
 
 	@Override
 	public int deleteSuggestion(SuggestionVO svo) {
-		// TODO Auto-generated method stub
 		return (int)session.update("deleteSuggestion");
 	}
 
@@ -131,31 +122,26 @@ public class BoardDaoImpl implements BoardDao {
 	
 	@Override
 	public List<SuReplyVO> selectSuReply(SuReplyVO srvo) {
-		// TODO Auto-generated method stub
 		return session.selectList("selectSuReply", srvo);
 	}
 
 	@Override
 	public List<SuReplyVO> chaebunSuReply() {
-		// TODO Auto-generated method stub
 		return session.selectOne("chaebunSuReply");
 	}
 
 	@Override
 	public int insertSuReply(SuReplyVO srvo) {
-		// TODO Auto-generated method stub
 		return (int)session.insert("insertSuReply", srvo);
 	}
 
 	@Override
 	public int updateSuReply(SuReplyVO srvo) {
-		// TODO Auto-generated method stub
 		return (int)session.update("updateSuReply", srvo);
 	}
 
 	@Override
 	public int deleteSuReply(SuReplyVO srvo) {
-		// TODO Auto-generated method stub
 		return (int)session.delete("deleteSuReply", srvo);
 	}
 
@@ -166,7 +152,6 @@ public class BoardDaoImpl implements BoardDao {
 	public List<SuLikeVO> chaebunSuLike() {
 		return session.selectOne("chaebunSuLike");
 	}
-
 	
 	@Override
 	public List<SuLikeVO> countSuLike(SuLikeVO slvo) {
@@ -187,8 +172,6 @@ public class BoardDaoImpl implements BoardDao {
 	public int unCheckSuLike(SuLikeVO slvo) {
 		return (int)session.delete("unCheckSuLike",slvo);
 	}
-	
-	
 	
 	@Override
 	public List<SuLikeVO> countSuDislike(SuLikeVO slvo) {

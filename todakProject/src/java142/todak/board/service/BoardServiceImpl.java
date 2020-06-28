@@ -28,7 +28,7 @@ public class BoardServiceImpl implements BoardService {
 	public List<NoticeVO> selectNotice(NoticeVO nvo) {
 		logger.info("(log)BoardServiceImpl.selectNotice 진입");
 		List<NoticeVO> sList = null;
-		sList = boardDao.listNotice(nvo);
+		sList = boardDao.selectNotice(nvo);
 		logger.info("(log)BoardServiceImpl.selectNotice 종료");
 		return sList;
 	}
@@ -41,7 +41,7 @@ public class BoardServiceImpl implements BoardService {
 		logger.info("(log)BoardServiceImpl.searchNotice 종료");
 		return sList;
 	}
-
+	
 	@Override
 	public int insertNotice(NoticeVO nvo) {
 		logger.info("(log)BoardServiceImpl.insertNotice 진입");
@@ -92,11 +92,21 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<MemberVO> selectWrite(MemberVO mvo) {
 		logger.info("(log)BoardServiceImpl.selectWrite 진입");
-		List<MemberVO> sList = null;
-		sList = boardDao.selectWrite(mvo);
+		List<MemberVO> wList = null;
+		wList = boardDao.selectWrite(mvo);
 		logger.info("(log)BoardServiceImpl.selectWrite 종료");
 		
-		return sList;
+		return wList;
+	}
+	
+	//글상세보기 시 글작성자 확인하기
+	@Override
+	public List<NoticeVO> searchWrite(NoticeVO nvo) {
+		logger.info("(log)BoardServiceImpl.searchNotice 진입");
+		List<NoticeVO> wList = null;
+		wList = boardDao.searchWrite(nvo);
+		logger.info("(log)BoardServiceImpl.searchNotice 종료");
+		return wList;
 	}
 
 	

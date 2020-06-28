@@ -9,19 +9,18 @@ import java142.todak.board.vo.SuggestionVO;
 import java142.todak.human.vo.MemberVO;
 
 public interface BoardService {
+	
+	//---------------------------공지사항 ------------------------------
 
+	public List<MemberVO> selectWrite(MemberVO mvo);//글쓰기 권한(부서 번호 조회)
+	public List<NoticeVO> searchWrite(NoticeVO nvo);//글작성자 사번가져오기
+	public List<NoticeVO> chaebunNotice(); //채번
 	public List<NoticeVO> selectNotice(NoticeVO nvo);
 	public List<NoticeVO> searchNotice(NoticeVO nvo);
 	public int insertNotice(NoticeVO nvo);
 	public int updateNotice(NoticeVO nvo);
 	public int deleteNotice(NoticeVO nvo);
 	public int updateNoticeHit(NoticeVO nvo);
-	
-	//글쓰기 권한(부서 번호 조회)
-	public List<MemberVO> selectWrite(MemberVO mvo);
-	
-	//채번
-	public List<NoticeVO> chaebunNotice();
 	
 	//---------------------------공지사항 확인------------------------------
 	public int checkNotice(NoCheckVO ncvo);

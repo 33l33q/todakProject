@@ -692,7 +692,7 @@ public class BoardController {
       String check_deptnum = "";
       
       if(c_hm_deptnum.length() > 2) check_deptnum = c_hm_deptnum.substring(2, 4);
-      else check_deptnum = "98"; //소속 팀이 없는 경우 기타 값을 넣음
+      else check_deptnum = "98"; //소속 팀이 없는 경우 기타 값을 넣음(CEO 등 예외를 위해)
       
       logger.info("check_divnum >>> : " + check_divnum);
       logger.info("check_deptnum >>> : " + check_deptnum);
@@ -722,9 +722,9 @@ public class BoardController {
           }
       nvo.setN_hm_empnum(hm_empnum);
           
-      model.addAttribute("noticeList", noticeSelectList);
-      model.addAttribute("writerQualified", writerQualified);
-      model.addAttribute("i_nvo",nvo);
+      model.addAttribute("noticeList", noticeSelectList); //게시글 목록 출력을 위한 vo
+      model.addAttribute("writerQualified", writerQualified); //로그인한 사람의 정보를 담은 vo
+      model.addAttribute("i_nvo",nvo); //페이징 값을 담은 vo
       
       logger.info("(log)BoardController.listNotice 종료");
     
@@ -744,20 +744,22 @@ public class BoardController {
       List<NoticeVO> list = null;
       NoticeVO nvo_Bn_num = null;
       
-      list = boardService.chaebunNotice();
+      list = boardService.chaebunNotice(); //글번호 생성을 위해  DB에 저장된 글 갯수 파악
       nvo_Bn_num = list.get(0);
       bn_num = nvo_Bn_num.getBn_num();
-      bn_num = ChaebunUtils.cNum2(bn_num, NOTICE_GUBUN);
+      bn_num = ChaebunUtils.cNum2(bn_num, NOTICE_GUBUN);//공통 클래스로 채번 생성
       logger.info(" bn_num : " + bn_num);
 
       String url = "";
       
-      FileUploadUtil fuu = new FileUploadUtil();
+      FileUploadUtil fuu = new FileUploadUtil();//cos.jar를 이용해 파일 업로드 공통 클래스
       boolean bFlag = false;
       bFlag = fuu.fileUpload(request, FILEPATH1);
       logger.info("bFlag >>> : " + bFlag );
       if(bFlag){
-         
+         /* 요건정리시 사진과 파일 둘 중 하나만 올리는 것이 가능하기 때문에
+          * 각각 두 요소의 값이 들어있는 경우와 그렇지 않은 경우를 구분해서 DB에 값을 넣어야함
+    	 */
          Enumeration<String> en = fuu.getFileNames();
          
          String firstFile =  en.nextElement();
@@ -866,18 +868,32 @@ public class BoardController {
    
    //공지사항 게시글 상세보기
    @RequestMapping(value="/searchNotice")
-   public String searchNotice(@ModelAttribute NoticeVO nvo, Model model){
+   public String searchNotice(@ModelAttribute NoticeVO nvo, Model model, HttpServletRequest request){
       logger.info("(log)BoardController.searchNotice 시작 >>> ");
+      
+      LoginSession sManager = LoginSession.getInstance();
+      
+      String sessionId = request.getSession().getId();
+      String hm_empnum = sManager.getUserID(sessionId);
+      
+      List<NoticeVO> noticeWriteList = null;
+      String bn_num = nvo.getBn_num();
+      logger.info("bn_num >>> : " + bn_num);
+      noticeWriteList = boardService.searchWrite(nvo);
+      
+      String n_hm_empnum = "";
+      n_hm_empnum = noticeWriteList.get(0).getHm_empnum();//게시글 작성자 사번 불러오기
+      
+      if(!n_hm_empnum.equals(hm_empnum)) {
+	      int iFlag = boardService.updateNoticeHit(nvo);
+	      logger.info("(log)BoardController.searchNotice 조회수 증가>>> " + iFlag);
+      } //게시글 작성자가 본인의 게시글에 들어가는 경우 조회수가 더해지지 않음
       
       List<NoticeVO> noticeSearchList = null;
       String url = null;
-      String bn_num = nvo.getBn_num();
-      logger.info("bn_num >>> : " + bn_num);
-      noticeSearchList =    boardService.searchNotice(nvo);
-      int iFlag = boardService.updateNoticeHit(nvo);
-      logger.info("(log)BoardController.searchNotice 조회수 증가>>> " + iFlag);
+      noticeSearchList = boardService.searchNotice(nvo);
       
-      VOPrintUtil.noticeVOPrint(nvo);
+      VOPrintUtil.noticeVOPrint(nvo); //vo를 출력하는 class
       
       model.addAttribute("noticeSearchList",noticeSearchList);
       

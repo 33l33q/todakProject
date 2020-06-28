@@ -120,7 +120,7 @@
          //n_hm_empnum는 현재 글을 보고 있는 사람의 empnum!
          String n_hm_empnum = sManager.getUserID(session.getId());
    
-           Object obj = request.getAttribute("noticeSearchList");
+         Object obj = request.getAttribute("noticeSearchList");
          ArrayList<NoticeVO> sList = (ArrayList<NoticeVO>)obj;
          
          NoticeVO nvo = sList.get(0);
