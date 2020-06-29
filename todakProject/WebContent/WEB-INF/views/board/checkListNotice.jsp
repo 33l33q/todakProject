@@ -13,7 +13,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>CheckListNotice</title>
+		<title>확인자리스트</title>
 		
 		<link href="/include/css/default.css" rel="stylesheet">
 		

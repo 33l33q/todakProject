@@ -646,19 +646,22 @@ public class BoardController {
       String pageCtrl=request.getParameter("pageCtrl");
       
       if(nvo.getFindIndex() == null){
-         String key=request.getParameter("key");//검색에 관련된 내용을 쿼리스트링으로 받는 내용입니다.
+         String key=request.getParameter("key");//검색에 관련된 내용을 쿼리스트링으로 받기
          nvo.setKeyword(key);
-         String index=request.getParameter("index");//검색에 관련된 내용을 쿼리스트링으로 받는 내용입니다.
+         String index=request.getParameter("index");//검색에 관련된 내용을 쿼리스트링으로 받기
          nvo.setFindIndex(index);
       }
       
+      //findIndex == 검색 카테고리
+      //keyword == 사용자가 입력한 검색 내용
       
+      //자신이 작성한 게시글 보기
       String findIndex = nvo.getFindIndex();
       logger.info("FindIndex == " + findIndex);
       if(findIndex != null && findIndex.equals("hm_empnum")) {
          nvo.setKeyword(hm_empnum);
          String e = "hm_empnum";
-         model.addAttribute("findIndex",e);
+         model.addAttribute("findIndex",e); //쿼리스트링으로 체크박스 checked 옵션 유지하기
       }
 
       logger.info("FindIndex == " + nvo.getFindIndex());

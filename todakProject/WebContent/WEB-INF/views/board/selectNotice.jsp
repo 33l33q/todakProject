@@ -56,16 +56,16 @@
          
          $("#findNotice").click(function(){
              var keyword = $("#keyword").val();
-             $("#keyword").val(keyword);
-
              var findIndex = $("#findIndex").val();
-             $("#findIndex").val(findIndex);
              
-             if(keyword == "전체" && findIndex == ("bn_divnum" || "bn_deptnum")){
-                $("#keyword").val("기타");
+             alert(keyword +"" + findIndex);
+             if(keyword == '전체' && findIndex == ("bn_divnum" || "bn_deptnum")){
+            	 $("#keyword").val("기타");
+            	 keyword = $("#keyword").val();
+            	 alert(keyword);
              }
              
-             if(keyword == "검색어를 입력하세요" && keyword == "null"){
+             if(keyword == "null"){
                 alert("검색어를 입력하세요");
                 return false;
              }
@@ -122,25 +122,19 @@
              $("#searchForm").submit();
           });
           
-          var selfCheck = $("input:checkbox[id='selectCheckForm']").is(":checked") ;
-
-          
           $("#selectCheck").change(function(){
-          if($("#selectCheck").is(":checked") == true ) {
-             $("#selectCheckForm").attr({
-                "method":"get",
-                "action":"../board/selectNotice.td"
-             });
-          
-             $("#selectCheckForm").submit(); 
-                
-             }else if($("#selectCheck").is(":checked") != true){
-         
-                goPage(1);
-             }
-             
+	          if($("#selectCheck").is(":checked") == true ) {
+	             $("#selectCheckForm").attr({
+	                "method":"get",
+	                "action":"../board/selectNotice.td"
+	             });
+	          
+	             $("#selectCheckForm").submit(); 
+	             
+	           }else if($("#selectCheck").is(":checked") != true){
+	                goPage(1);
+	           }
           });
-
       });
       </script>
    </head>
@@ -166,27 +160,26 @@
                   <input type="hidden" name="hm_empnum" id="hm_empnum" value="<%=user_ID%>">   
                </form>
                   <%-- ==================체크박스 기능================== --%>
-            <div class="table_align" align ="right">
-               <form id="selectCheckForm" name="selectCheckbox" method="POST">
-                  <input type="hidden" name="hm_empnum" value="<%=user_ID%>">   
-                  <input type="hidden" name="findIndex" value="hm_empnum" >
-<%
-                  String findIndex = (String)request.getAttribute("findIndex");
-                  if(findIndex==null){
-%>
-                     <input type="checkbox" id="selectCheck"   name="selectCheck">
-                     <label for="selectCheck">작성한 게시글 보기</label>
-<%
-                  }else{
-
-%>
-                     <input type="checkbox" id="selectCheck"   name="selectCheck" checked="checked">
-                     <label for="selectCheck">작성한 게시글 보기</label>
-<%
-                  }
-%>
-               </form>
-            </div>
+	            <div class="table_align" align ="right">
+	               <form id="selectCheckForm" name="selectCheckbox" method="POST">
+	                  <input type="hidden" name="hm_empnum" value="<%=user_ID%>">   
+	                  <input type="hidden" name="findIndex" value="hm_empnum" >
+	<%
+	                  String findIndex = (String)request.getAttribute("findIndex");
+	                  if(findIndex==null){
+	%>
+	                     <input type="checkbox" id="selectCheck"   name="selectCheck">
+	                     <label for="selectCheck">작성한 게시글 보기</label>
+	<%
+	                  }else{
+	%>
+	                     <input type="checkbox" id="selectCheck"   name="selectCheck" checked="checked">
+	                     <label for="selectCheck">작성한 게시글 보기</label>
+	<%
+	                  }
+	%>
+	               </form>
+	            </div>
                      <%-- ==================검색 기능 시작=================== --%>
                <div class="table_align" id="noticeSearch">
                   <form id="no_search" name="no_search" align ="left">
@@ -198,7 +191,7 @@
                            <tr>
                               <td id="btd1">
                                  <label>검색조건</label>
-                                 <select class="findIndex" name="findIndex">
+                                 <select class="findIndex" name="findIndex"> 
                                     <option value="all">전체</option>
                                     <option value="bn_title">제목</option>
                                     <option value="bn_content">내용</option>
