@@ -878,6 +878,7 @@ public class BoardController {
       
       String sessionId = request.getSession().getId();
       String hm_empnum = sManager.getUserID(sessionId);
+      String url = null;
       
       List<NoticeVO> noticeWriteList = null;
       String bn_num = nvo.getBn_num();
@@ -890,24 +891,25 @@ public class BoardController {
       if(!n_hm_empnum.equals(hm_empnum)) {
 	      int iFlag = boardService.updateNoticeHit(nvo);
 	      logger.info("(log)BoardController.searchNotice 조회수 증가>>> " + iFlag);
+	      
+	      if(iFlag==0){
+	    	  url = "redirect:/board/selectNotice.td";
+	    	  return url;
+	      } 
       } //게시글 작성자가 본인의 게시글에 들어가는 경우 조회수가 더해지지 않음
       
       List<NoticeVO> noticeSearchList = null;
-      String url = null;
       noticeSearchList = boardService.searchNotice(nvo);
-      
-      VOPrintUtil.noticeVOPrint(nvo); //vo를 출력하는 class
       
       model.addAttribute("noticeSearchList",noticeSearchList);
       
       if(noticeSearchList.size() == 1){
          url = "/board/searchNotice";
       }else{
-         url = "redirect:" + "/board/selectNotice.td";
+         url = "redirect:/board/selectNotice.td";
       }
-      
       return  url;
-   }
+   }//searchNotice 종료
 
    //파일다운로드 함수
    @RequestMapping(value="/downloadNotice")
@@ -1088,9 +1090,6 @@ public class BoardController {
    public String checkNotice(@ModelAttribute NoCheckVO ncvo, Model model){
       logger.info("(log)BoardController.checkNotice 시작 >>> ");
       logger.info("(log)BoardController.chaebunNoCheck 시작 >>> ");
-
-      
-      
       String bn_checknum = "";
       String message = "";
       List<NoCheckVO> list = null;
@@ -1139,8 +1138,6 @@ public class BoardController {
    @RequestMapping(value="/checkList")
    public String checkList(@ModelAttribute NoCheckVO ncvo, Model model){
       logger.info("(log)BoardController.moveCheckList 시작  >>>");
-      
-      //System.out.println(ncvo.getBn_num());
       
       List<NoCheckVO> cList = null;
       cList = boardService.checkList(ncvo);

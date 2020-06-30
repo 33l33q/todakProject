@@ -58,17 +58,17 @@
 						for(int i = 0 ; i < cList.size() ; i ++ ){
 						
 							NoCheckVO ncvo = cList.get(i);
-							String bn_checknum = ncvo.getBn_checknum();
-							bn_checknum = bn_checknum.substring(bn_checknum.length() - 4, bn_checknum.length());
+							String rownum = ncvo.getRownum();
+//							String bn_checknum = ncvo.getBn_checknum();
+//							bn_checknum = bn_checknum.substring(bn_checknum.length() - 4, bn_checknum.length());
 							String bn_checkdate = ncvo.getBn_checkdate();
-							//System.out.println("bn_checkdate >>> : " +  bn_checkdate);	
 							bn_checkdate = bn_checkdate.substring(0,10);
 							
 					
 		%>
 		
 								<tr>
-									<td  align ="center" ><%= bn_checknum %></td>
+									<td  align ="center" ><%= rownum %></td>
 									<td  align ="center" ><%= ncvo.getHm_name() %></td>
 									<td  align ="center" ><%= ncvo.getHm_deptnum() %></td>
 									<td  align ="center" ><%= bn_checkdate %></td>

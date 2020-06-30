@@ -9,7 +9,14 @@ public class NoCheckVO {
 	 private  String  hm_deptnum ;
 	 private  String  bn_checkdate ;
 	 private  String  bn_checkyn ;
-	 
+	 private  String  rownum;
+	
+	public String getRownum() {
+		return rownum;
+	}
+	public void setRownum(String rownum) {
+		this.rownum = rownum;
+	}
 	public String getBn_checknum() {
 		return bn_checknum;
 	}

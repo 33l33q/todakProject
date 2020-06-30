@@ -48,15 +48,14 @@
              .attr("action","../board/deleteNotice.td")
                .submit();
           });
+          
          $("#checkNotice").click(function(){
-               var bn_num = $("#bn_num").val();               
-               $("#bn_num").val(bn_num);
-               
              var n_hm_empnum = $("#n_hm_empnum").val();
              $("#hm_empnum").val(n_hm_empnum);
 			
          	var windowW = 480;  // 창의 가로 길이
 	        var windowH = 280;  // 창의 세로 길이
+	        
 	        var left = Math.ceil((window.screen.width - windowW)/2);
 	        var top = Math.ceil((window.screen.height - windowH)/2);
 	        
@@ -64,12 +63,11 @@
             $("#searchNotice").attr("action", "../board/moveCheckNotice.td");
             $("#searchNotice").attr("target","pop");
             $("#searchNotice").submit();
-            
+
             location.reload();
-            });
+         });
          
          $("#checkList").click(function(){
-
              var n_hm_empnum = $("#n_hm_empnum").val();
              $("#hm_empnum").val(n_hm_empnum);
              var windowW = 600;  // 창의 가로 길이
@@ -84,7 +82,8 @@
             $("#searchNotice").submit();
             
             location.reload();
-                        });
+             
+         });
           
           $("#selectNotice").click(function(){
              var n_hm_empnum = $("#n_hm_empnum").val();

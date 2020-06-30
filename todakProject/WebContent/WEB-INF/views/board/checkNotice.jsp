@@ -19,7 +19,10 @@
 		<script type="text/javascript">
 			alert('<%=message %>');
 			
-			window.close();
+			$(document).ready(function(){
+			    self.close();
+			});
+
 		</script>
 	
 <%
@@ -73,8 +76,7 @@
 						<tr>
 							<td>
 								<div align="center" style="padding:15px;">
-									<input type="button" class="button"
-										   id="n_check" name="n_check" value="확인">
+									<input type="button" class="button" id="n_check" name="n_check" value="확인">
 								</div>
 							</td>
 						</tr>

@@ -54,18 +54,19 @@
             }
          });
          
+        
          $("#findNotice").click(function(){
              var keyword = $("#keyword").val();
              var findIndex = $("#findIndex").val();
              
-             alert(keyword +"" + findIndex);
-             if(keyword == '전체' && findIndex == ("bn_divnum" || "bn_deptnum")){
-            	 $("#keyword").val("기타");
-            	 keyword = $("#keyword").val();
-            	 alert(keyword);
+             var keywordAll = "전체";
+             
+			 alert(keyword + "" + keywordAll);
+             if(keyword == keywordAll && findIndex == ("bn_divnum" || "bn_deptnum")){
+                $("#keyword").val("기타");
              }
              
-             if(keyword == "null"){
+             if(!keyword){
                 alert("검색어를 입력하세요");
                 return false;
              }
@@ -148,10 +149,6 @@
          </aside>
          
          <div class="context-container">
-            
-   <%
-   
-   %>
             <div id="boardContainer">
             <div id="boardTit"><h3><b>공지사항</b></h3></div>
             <hr>

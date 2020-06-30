@@ -191,7 +191,7 @@
    
    <!-- 공지사항 확인 채번 -->
    <select id="chaebunNoCheck" resultType="ncvo">
-       SELECT LPAD(NVL(MAX(SUBSTR(bn_checknum, -4)),0)+1,'4',0) bn_checknum FROM board_nocheck
+      SELECT LPAD(NVL(MAX(SUBSTR(bn_checknum, -4)),0)+1,'4',0) bn_checknum FROM board_nocheck
    </select>
    
    <!-- insert : 공지사항 확인자 정보 저장 -->
@@ -227,15 +227,16 @@
    
    <!-- 공지사항 확인자 리스트 출력하기 -->
    <select id="checkList" parameterType="ncvo" resultType="ncvo">
-
-      SELECT  	A.hm_name         hm_name, 
-              	A.bn_checknum     bn_checknum,
-              	B.cd_name         hm_deptnum,
-              	TO_DATE(A.bn_checkdate, 'YYYY-MM-DD')  bn_checkdate
-      FROM   	CODE B, board_nocheck A
-      WHERE    	B.cd_code IN (SELECT SUBSTR(A.hm_deptnum ,-2,2) FROM board_nocheck)
-      AND    	A.bn_num = #{bn_num} 
-
+      select  	rownum,
+      			C.*
+      from		(     select  	A.hm_name         hm_name, 
+				              	A.bn_checknum     bn_checknum,
+				              	B.cd_name         hm_deptnum,
+				              	TO_DATE(A.bn_checkdate, 'YYYY-MM-DD')  bn_checkdate
+				      from   	board_nocheck A, code B
+				      where    	B.cd_code IN (SELECT SUBSTR(A.hm_deptnum ,-2,2) FROM board_nocheck)
+				      and    	A.bn_num = #{bn_num}
+				      order by  bn_checknum ) C
    </select>
    
 </mapper>
