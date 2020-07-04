@@ -14,7 +14,7 @@ public class CodeVO {
 	private String keyword;
 	private String findIndex;
 	   
-	//°Ë»ö¿ë hm_empnum
+	//ê²€ìƒ‰ìš© hm_empnum
 	private String n_hm_empnum;
 	
 	   

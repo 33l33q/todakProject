@@ -22,8 +22,8 @@
       Object obj2 = request.getAttribute("i_svo");
       SuggestionVO pvo =(SuggestionVO) obj2; //pvo ==> pageVO
 
-      String key = pvo.getKeyword();//검색을위한 변수 받아옵니다.
-      String index = pvo.getFindIndex();//검색을 위한 변수 받아옵니다.
+      String key = pvo.getKeyword();//검색을 위한 변수 받아오기
+      String index = pvo.getFindIndex();//검색을 위한 변수 받아오기
       
       String n_hm_empnum = user_ID;
       int Size = pvo.getPageSize();

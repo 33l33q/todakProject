@@ -73,7 +73,6 @@ public class FileReadUtil {
 		fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1"); //파일이름만 utf-8로 인코딩
 		
 		response.setHeader("Content-Disposition","attachment; filename=" + fileName + ";");
-		
 		response.setHeader("Content-Transfer-Encoding", "7bit");
 		response.setHeader("Accept-Ranges", "bytes");
 		response.setContentLength((int)fileSize);
@@ -87,10 +86,7 @@ public class FileReadUtil {
 		final byte[] buf = new byte[BUF_SIZE];
 		int n;
 		
-		while(-1 != (n = in.read(buf)))
-		{
-			out.write(buf, 0, n);
-		}
+		while(-1 != (n = in.read(buf)))	out.write(buf, 0, n);
 		out.flush();
 		logger.info("(log)readFile 종료");
 	}

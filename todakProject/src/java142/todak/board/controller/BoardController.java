@@ -36,12 +36,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/board")
 public class BoardController {
-   
-   
-//   final static String FILEPATH1 =  "//home//ec2-user//tomcatt//webapps//todakProject//upload//board//notice";
-//   final static String FILEPATH2 =  "//home//ec2-user//tomcatt//webapps//todakProject//upload//board//suggestion";
-   final static String FILEPATH1 =  "C://Users//BEE//Desktop//finalProject//todakProject//WebContent//upload//board//notice";
-   final static String FILEPATH2 =  "C://Users//BEE//Desktop//finalProject//todakProject//WebContent//upload//board//suggestion";
+	
+	// final static String FILEPATH1 =  "//home//ec2-user//tomcatt//webapps//todakProject//upload//board//notice";
+	// final static String FILEPATH2 =  "//home//ec2-user//tomcatt//webapps//todakProject//upload//board//suggestion";   final static String FILEPATH1 =   "C://Users//BEE//Desktop//finalProject//todakProject//WebContent//upload//board//notice";
+   final static String FILEPATH2 =   "C://Users//BEE//Desktop//finalProject//todakProject//WebContent//upload//board//suggestion";
    final static String DOWNLOADPATH1 = "upload/board/notice/";
    final static String DOWNLOADPATH2 = "upload/board/suggestion/";
    final static String NOTICE_GUBUN = "N";
@@ -49,10 +47,9 @@ public class BoardController {
    final static String SUREPLY_GUBUN = "R";
    final static String SULIKE_GUBUN = "L";
    final static String CHECK_GUBUN = "C";
-   
+  
    Logger logger = Logger.getLogger(BoardController.class);
 
-   
    @Autowired
    private BoardService boardService;
 
@@ -908,7 +905,7 @@ public class BoardController {
       }else{
          url = "redirect:/board/selectNotice.td";
       }
-      return  url;
+      return  url;	
    }//searchNotice 종료
 
    //파일다운로드 함수

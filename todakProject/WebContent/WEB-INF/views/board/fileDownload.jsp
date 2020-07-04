@@ -17,14 +17,6 @@
 		<title>파일 다운로드 </title>
 	</head>
 	<body>
-		<header class="header"> 
-            <%@ include file="/WEB-INF/views/commons/header.jsp" %>
-         </header>
-
-         <aside class="sidebar">
-            <%@ include file="/WEB-INF/views/commons/sidebar.jsp" %>
-         </aside>
-         
          <div class="container">
 	<%
 	
@@ -45,3 +37,5 @@
          </div>
 	</body>
 </html>
+
+
