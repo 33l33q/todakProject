@@ -213,7 +213,7 @@
                                  to_char(sysdate,'YYYYMMDD'),
                                  'y'
             from dual
-            where not exists (
+            where not in (
                             select  bn_checknum
                                     hm_empnum,
                                     bn_num

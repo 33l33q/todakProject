@@ -4,7 +4,9 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java142.todak.common.ChaebunUtils;
+import java142.todak.common.FilePath;
 import java142.todak.common.FileUploadUtil;
 import java142.todak.common.VOPrintUtil;
 import java142.todak.ework.service.EworkFormService;
@@ -46,8 +48,7 @@ public class EworkFormController {
 	public final static String AUTHPERSON_GUNBUN = "S";
 	public final static String AUTHBOX_GUNBUN = "B";
 	
-	private static final String UPLOAD_ABSTRACT_PATH = "//home//ec2-user//tomcatt//webapps//todakProject//upload//ework//auth";
-	private static final String UPLOAD_RELATIVE_PATH = "upload//ework//auth";
+	private static final String A_PATH = "ework//auth//";
 	
 	private String el_num = "";
 	
@@ -198,7 +199,7 @@ public class EworkFormController {
 		FileUploadUtil fuu = new FileUploadUtil();
 		logger.info("  fuu : " + fuu);
 		
-		bFlag = fuu.fileUpload(request, UPLOAD_ABSTRACT_PATH);
+		bFlag = fuu.fileUpload(request,  FilePath.ABSTRACT_PATH + A_PATH);
 		logger.info("  bFlag : " + bFlag);
 		
 		if(bFlag) {
@@ -229,7 +230,7 @@ public class EworkFormController {
 			String file = files.nextElement();
 			logger.info("  file : " + file);
 			
-			String fileDirectory = UPLOAD_RELATIVE_PATH + "//" + file;
+			String fileDirectory = FilePath.RELATIVE_PATH + A_PATH + file;
 			logger.info("  fileDirectory : " + fileDirectory);
 			
 			_avo = new ApprovalVO();
@@ -382,7 +383,7 @@ public class EworkFormController {
 		logger.info("  file : " + file);
 		
 		model.addAttribute("fileName", file);
-		model.addAttribute("FilePath", UPLOAD_ABSTRACT_PATH);
+		model.addAttribute("FilePath", FilePath.ABSTRACT_PATH + A_PATH);
 		
 		logger.info("(EworkFormController)public String downloadDocument(@ModelAttribute FileVO fvo, Model model) 끝 >>> ");
 		return "ework/downloadForm";
@@ -430,7 +431,7 @@ public class EworkFormController {
 			FileUploadUtil fuu = new FileUploadUtil();
 			logger.info("  fuu : " + fuu);
 			
-			file_flag = fuu.fileUpload(request, UPLOAD_ABSTRACT_PATH);
+			file_flag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + A_PATH);
 			logger.info("  file_flag : " + file_flag);
 			
 			if(file_flag) {
@@ -461,7 +462,7 @@ public class EworkFormController {
 				String file = files.nextElement();
 				logger.info("  file : " + file);
 				
-				fileDirectory = UPLOAD_RELATIVE_PATH + "//"+ file;
+				fileDirectory = FilePath.RELATIVE_PATH + A_PATH+ file;
 				logger.info("  fileDirectory : " + fileDirectory);
 			}
 			

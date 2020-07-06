@@ -138,9 +138,6 @@ public class BoardServiceImpl implements BoardService {
 		return cList;
 	}
 
-
-	 
-	
 	//---------------------------건의사항------------------------------
 	
 	@Override

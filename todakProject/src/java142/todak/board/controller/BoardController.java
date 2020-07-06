@@ -13,11 +13,11 @@ import java142.todak.common.ChaebunUtils;
 import java142.todak.common.FileUploadUtil;
 import java142.todak.common.Paging;
 import java142.todak.common.VOPrintUtil;
+import java142.todak.common.FilePath;
 import java142.todak.etc.utils.LoginSession;
 import java142.todak.human.vo.MemberVO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,18 +36,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/board")
 public class BoardController {
+
+	final static String NOTICE_GUBUN = "N";
+	final static String SUGGESTION_GUBUN = "S";
+	final static String SUREPLY_GUBUN = "R";
+	final static String SULIKE_GUBUN = "L";
+	final static String CHECK_GUBUN = "C";
 	
-	// final static String FILEPATH1 =  "//home//ec2-user//tomcatt//webapps//todakProject//upload//board//notice";
-	// final static String FILEPATH2 =  "//home//ec2-user//tomcatt//webapps//todakProject//upload//board//suggestion";   final static String FILEPATH1 =   "C://Users//BEE//Desktop//finalProject//todakProject//WebContent//upload//board//notice";
-   final static String FILEPATH2 =   "C://Users//BEE//Desktop//finalProject//todakProject//WebContent//upload//board//suggestion";
-   final static String DOWNLOADPATH1 = "upload/board/notice/";
-   final static String DOWNLOADPATH2 = "upload/board/suggestion/";
-   final static String NOTICE_GUBUN = "N";
-   final static String SUGGESTION_GUBUN = "S";
-   final static String SUREPLY_GUBUN = "R";
-   final static String SULIKE_GUBUN = "L";
-   final static String CHECK_GUBUN = "C";
-  
+	final static String N_PATH = "board//notice//";
+	final static String S_PATH = "board//suggetion//"; 
+	
+
+	
    Logger logger = Logger.getLogger(BoardController.class);
 
    @Autowired
@@ -472,7 +472,8 @@ public class BoardController {
       
       FileUploadUtil fuu = new FileUploadUtil();
       boolean bFlag = false;
-      bFlag = fuu.fileUpload(request, FILEPATH2);
+      bFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + S_PATH);
+      
       
       logger.info("bFlag >>> : " + bFlag );
          
@@ -483,12 +484,12 @@ public class BoardController {
          String fileName = en.nextElement();
          
          if(fileName != null){
-            fileName = fileName.replaceAll(DOWNLOADPATH2, "");
+            fileName = fileName.replaceAll( FilePath.RELATIVE_PATH + S_PATH, "");
          }
 
          
          if(fileName != null){
-            String bs_image = DOWNLOADPATH2 + fileName;
+            String bs_image = FilePath.RELATIVE_PATH + S_PATH + fileName;
             svo.setBs_image(bs_image);
          }else{
             svo.setBs_image("");
@@ -542,12 +543,12 @@ public class BoardController {
 
       String bs_image = svo.getBs_image();
       
-      bs_image = bs_image.replace(DOWNLOADPATH2, "");
+      bs_image = bs_image.replace(FilePath.RELATIVE_PATH + S_PATH , "");
       
       logger.info("bs_image >>> " + bs_image);
       
       model.addAttribute("fileName" ,bs_image);
-      model.addAttribute("FilePath", FILEPATH2 );
+      model.addAttribute("FilePath", FilePath.ABSTRACT_PATH + S_PATH );
       
       logger.info("(log)BoardController.downloadSuggestion 종료 >>> ");
       return "board/fileDownload";
@@ -575,13 +576,11 @@ public class BoardController {
       svo.setBs_num(ChaebunUtils.cNum2(bs_num, SUGGESTION_GUBUN));
       logger.info("(log)BoardController.cheabunSuggestion 종료  : bs_num >>> " + ChaebunUtils.cNum2(bs_num, SUGGESTION_GUBUN));
 
-      
       String url =  null;
-      
       
       FileUploadUtil fuu = new FileUploadUtil();
       boolean bFlag = false;
-      bFlag = fuu.fileUpload(request, FILEPATH2);
+      bFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + S_PATH);
       logger.info("bFlag >>> : " + bFlag );
       
       if(bFlag){
@@ -591,7 +590,7 @@ public class BoardController {
          String fileName = en.nextElement();
          
          if(fileName != null){
-            String bs_image = DOWNLOADPATH2 + fileName;
+            String bs_image = FilePath.RELATIVE_PATH + S_PATH + fileName;
             svo.setBs_image(bs_image);
          }else{
             svo.setBs_image("");
@@ -754,7 +753,7 @@ public class BoardController {
       
       FileUploadUtil fuu = new FileUploadUtil();//cos.jar를 이용해 파일 업로드 공통 클래스
       boolean bFlag = false;
-      bFlag = fuu.fileUpload(request, FILEPATH1);
+      bFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + N_PATH);
       logger.info("bFlag >>> : " + bFlag );
       if(bFlag){
          /* 요건정리시 사진과 파일 둘 중 하나만 올리는 것이 가능하기 때문에
@@ -771,7 +770,7 @@ public class BoardController {
          
          if(secondFile == null && firstFile != null){
             
-            nvo.setBn_image(DOWNLOADPATH1 + firstFile);
+            nvo.setBn_image(FilePath.RELATIVE_PATH + N_PATH + firstFile);
             nvo.setBn_file("");
             logger.info("1.파일명 >>> : " +  nvo.getBn_file());
             logger.info("1.이미지명 >>> : " +  nvo.getBn_image());
@@ -790,7 +789,7 @@ public class BoardController {
          
          }else{
             nvo.setBn_file(secondFile);
-            nvo.setBn_image(DOWNLOADPATH2 + firstFile);
+            nvo.setBn_image(FilePath.RELATIVE_PATH + N_PATH + firstFile);
             logger.info("4.파일명 >>> : " +  nvo.getBn_file());
             logger.info("4.이미지명 >>> : " +  nvo.getBn_image());
          }
@@ -839,7 +838,6 @@ public class BoardController {
       
       int result = boardService.insertNotice(nvo);
    
-      //System.out.println("iFlag >>> " + result );
       if(result > 0){
          logger.info("글 작성 성공!");
          
@@ -918,12 +916,14 @@ public class BoardController {
       logger.info("bn_file >>> " + bn_file);
       
       model.addAttribute("fileName" ,bn_file);
-      model.addAttribute("FilePath", FILEPATH1 );
+      model.addAttribute("FilePath", FilePath.ABSTRACT_PATH + N_PATH );
       
       logger.info("(log)BoardController.downloadNotice 종료 >>> ");
       return "board/fileDownload";
    }
 
+
+   
    //공지사항 게시글 수정페이지로 이동
    @RequestMapping(value="/moveUpdateNotice")
    public String moveUpdateNotice(@ModelAttribute NoticeVO nvo, Model model){
@@ -956,7 +956,7 @@ public class BoardController {
          
          FileUploadUtil fuu = new FileUploadUtil();
          boolean bFlag = false;
-         bFlag = fuu.fileUpload(request, FILEPATH1);
+         bFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + N_PATH);
          
          logger.info("bFlag >>> : " + bFlag );
          
@@ -971,13 +971,13 @@ public class BoardController {
             logger.info("secondFile >>> : " + secondFile);
             
             if(firstFile != null){
-               firstFile = firstFile.replaceAll(DOWNLOADPATH1, "");
+               firstFile = firstFile.replaceAll(FilePath.RELATIVE_PATH + N_PATH, "");
             }
 
             
             if(secondFile == null && firstFile != null){
                
-               nvo.setBn_image(DOWNLOADPATH1 + firstFile);
+               nvo.setBn_image(FilePath.RELATIVE_PATH + N_PATH + firstFile);
                nvo.setBn_file("");
                logger.info("1.파일명 >>> : " +  nvo.getBn_file());
                logger.info("1.이미지명 >>> : " +  nvo.getBn_image());
@@ -996,7 +996,7 @@ public class BoardController {
             
             }else{
                nvo.setBn_file(secondFile);
-               nvo.setBn_image(DOWNLOADPATH1 + firstFile);
+               nvo.setBn_image(FilePath.RELATIVE_PATH + N_PATH + firstFile);
                logger.info("4.파일명 >>> : " +  nvo.getBn_file());
                logger.info("4.이미지명 >>> : " +  nvo.getBn_image());
             }
@@ -1124,7 +1124,6 @@ public class BoardController {
       }
    
       model.addAttribute("message",message);
-      //System.out.println("iFlag >>> " + iFlag );
 
       logger.info("(log)BoardController.insertNotice 종료 ");
       

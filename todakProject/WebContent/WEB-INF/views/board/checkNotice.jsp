@@ -24,12 +24,10 @@
 			});
 
 		</script>
-	
 <%
 	}else{
 
 %>
-
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -44,11 +42,8 @@
 					$("#CheckNoticeForm")
 					.attr(	"action", "../board/checkNotice.td")
 					.submit();
-					
 				});
-	
 			});
-			
 		</script>
 	</head>
 <%
@@ -57,12 +52,10 @@
 		ArrayList<MemberVO> mList = (ArrayList<MemberVO>) obj;
 		String bn_num = (String)request.getAttribute("bn_num");
         MemberVO mvo = mList.get(0);
-		//System.out.println(mvo.getHm_name() + " : " + mvo.getHm_deptnum());
 		
 %>
 	<body>
          <div style="width:400px;height:150px;padding:60px 0 0 0;">
-         	
 			<form id="CheckNoticeForm" name="CheckNoticeForm" enctype="application/x-www-form-urlencoded" method="POST">
 				<input type="hidden" id="bn_num" name="bn_num" value="<%=bn_num %>">
 				<input type="hidden" id="hm_empnum" name="hm_empnum" value="<%=hm_empnum %>">
@@ -84,8 +77,6 @@
 				</div>
 			</form>
          </div>
-		
-		
 <%
 	}
 %>

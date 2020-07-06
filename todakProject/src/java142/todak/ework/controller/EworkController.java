@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java142.todak.common.ChaebunUtils;
+import java142.todak.common.FilePath;
 import java142.todak.common.FileUploadUtil;
 import java142.todak.common.VOPrintUtil;
 import java142.todak.ework.service.EworkFormService;
@@ -20,10 +18,13 @@ import java142.todak.ework.vo.EanumVO;
 import java142.todak.ework.vo.HolidayVO;
 import java142.todak.ework.vo.LineHistoryVO;
 import java142.todak.ework.vo.LineVO;
-import java142.todak.human.vo.MemberVO;
 import java142.todak.ework.vo.ProposalVO;
 import java142.todak.ework.vo.SelectAuthBoxVO;
 import java142.todak.ework.vo.SignStampVO;
+import java142.todak.human.vo.MemberVO;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,7 @@ public class EworkController {
 	public final static String LINEHISTORY_GUNBUN = "I";
 	public final static String SIGNSTAMP_GUNBUN = "S";
 	
-	public final static String UPLOAD_ABSTRACT_PATH = "//home//ec2-user//tomcatt//webapps//todakProject//upload//ework//sign";
-	public final static String UPLOAD_RELATIVE_PATH = "upload//ework//sign";
+	public final static String U_PATH = "ework//sign//";
 	
 	
 	@Autowired
@@ -1360,7 +1360,7 @@ public class EworkController {
 			FileUploadUtil fuu = new FileUploadUtil();
 			logger.info("  fuu : " + fuu);
 			
-			uploadFlag = fuu.fileUpload(request, UPLOAD_ABSTRACT_PATH);
+			uploadFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + U_PATH);
 			logger.info("  uploadFlag : " + uploadFlag);
 			
 			SignStampVO _ssvo = null;
@@ -1381,7 +1381,7 @@ public class EworkController {
 				String file = files.nextElement();
 				logger.info("  file : " + file);
 				
-				String fileDirectory = UPLOAD_RELATIVE_PATH + "//" + file;
+				String fileDirectory = FilePath.RELATIVE_PATH + U_PATH + file;
 				logger.info("  fileDirectory : " + fileDirectory);
 				
 				_ssvo.setHm_empnum(hm_empnum);

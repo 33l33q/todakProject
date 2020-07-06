@@ -25,7 +25,6 @@ public class BoardDaoImpl implements BoardDao {
 		return  session.selectList("selectNotice");
 	}
 	
-	
 	@Override
 	public List<NoticeVO> searchNotice(NoticeVO nvo){
 		return  session.selectList("searchNotice");

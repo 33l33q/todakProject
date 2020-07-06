@@ -24,7 +24,7 @@ public class FileReadUtil {
 		
 		logger.info("fileName/ filePath >>> : " + fileName + " / " + filePath);
 		
-		String realFilePath = filePath  + "//" + fileName;
+		String realFilePath = filePath + fileName;
 		
 		logger.info("newFilePath >>> : " + realFilePath);
 		
