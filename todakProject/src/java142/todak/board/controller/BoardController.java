@@ -796,21 +796,16 @@ public class BoardController {
 
          String bn_file = nvo.getBn_file();
          String bn_image = nvo.getBn_image();
-   
-         logger.info("파일이름 >>>> " + bn_file);
-         logger.info("이미지이름 >>>> " + bn_image);
          
          String bn_title = fuu.getParameter("bn_title");
          String hm_name = fuu.getParameter("hm_name");
          String hm_empnum = fuu.getParameter("hm_empnum");
-         
          String bn_content = fuu.getParameter("bn_content");
          String hm_duty = fuu.getParameter("hm_duty");
-         
          String bn_divnum   = fuu.getParameter("bn_divnum");
          String bn_deptnum = fuu.getParameter("bn_deptnum");
          
-         logger.info(hm_empnum + "" + bn_num + "" + bn_title + "" + hm_name + "" +bn_content + "" + bn_deptnum +"" + hm_duty);
+         logger.info(hm_empnum + "" + bn_num + "" + bn_title + "" + hm_name + "" +bn_content + "" + bn_deptnum +"" + hm_duty + "" +bn_file + "" + bn_image);
          
          nvo.setHm_empnum(hm_empnum);
          nvo.setBn_num(bn_num);
@@ -820,11 +815,10 @@ public class BoardController {
          nvo.setBn_image(bn_image);
          nvo.setBn_file(bn_file);
          nvo.setBn_deptnum(bn_deptnum);
-         
-         if(bn_deptnum == null) nvo.setBn_divnum("");
-         else nvo.setBn_divnum(bn_divnum);
-         
          nvo.setHm_duty(hm_duty);
+         
+         if(bn_deptnum == null) nvo.setBn_divnum(""); //부서만 선택하고 팀은 선택하지 않는 경우
+         else nvo.setBn_divnum(bn_divnum);
          
          model.addAttribute("hm_empnum",hm_empnum);
          
@@ -840,12 +834,10 @@ public class BoardController {
    
       if(result > 0){
          logger.info("글 작성 성공!");
-         
          url = "/board/selectNotice.td";
       }else{ 
          logger.info("글 작성 오류 발생 !"); 
       }
-
 
       logger.info("(log)BoardController.insertNotice 종료 ");
       return "redirect:" + url;
@@ -857,10 +849,8 @@ public class BoardController {
       logger.info("(log)BoardController.moveWriteNotice 시작 >>> ");
       List<MemberVO> mList = null;
       mList = boardService.selectWrite(mvo);
-
       model.addAttribute("mList", mList);
-
-
+      
       return "board/insertNotice";
    }
    
@@ -938,10 +928,10 @@ public class BoardController {
       model.addAttribute("updateList",updateList);
       
       
-      if(updateList.size() == 1){
-         url = "board/updateNotice";
+      if(updateList.size() == 1){ 
+    	  url = "board/updateNotice";
       }else{
-         url = "redirect:" + "/board/selectNotice.td";
+    	  url = "redirect:" + "/board/selectNotice.td";
       }
       
       logger.info("(log)BoardController.updateSearchNotice 종료 >>> ");
@@ -961,7 +951,6 @@ public class BoardController {
          logger.info("bFlag >>> : " + bFlag );
          
          if(bFlag){
-            
             Enumeration<String> en = fuu.getFileNames();
             
             String firstFile =  en.nextElement();
@@ -1010,14 +999,22 @@ public class BoardController {
             String bn_title = fuu.getParameter("bn_title");
             String bn_content = fuu.getParameter("bn_content");
             String bn_num = fuu.getParameter("bn_num");
+            String bn_divnum   = fuu.getParameter("bn_divnum");
+            String bn_deptnum = fuu.getParameter("bn_deptnum");
             
             logger.info(bn_num + "" + bn_title + "" +bn_content + "");
+            
+            System.out.println("bn_deptnum >>> " + bn_deptnum + " ,bn_divnum >>>" + bn_divnum );
             
             nvo.setBn_num(bn_num);
             nvo.setBn_title(bn_title);
             nvo.setBn_content(bn_content);
             nvo.setBn_image(bn_image);
             nvo.setBn_file(bn_file);
+            nvo.setBn_deptnum(bn_deptnum);
+            
+            if(bn_deptnum == null) nvo.setBn_divnum(""); //부서만 선택하고 팀은 선택하지 않는 경우
+            else nvo.setBn_divnum(bn_divnum);
          
 
             VOPrintUtil.noticeVOPrint(nvo);
@@ -1036,7 +1033,7 @@ public class BoardController {
          
          String bn_num = nvo.getBn_num();
          
-         return "redirect:" + "/board/searchNotice.td?bn_num=" + bn_num;
+         return "redirect:/board/searchNotice.td?bn_num=" + bn_num;
       }
 
       

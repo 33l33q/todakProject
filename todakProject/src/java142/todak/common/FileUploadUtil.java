@@ -28,9 +28,7 @@ public class FileUploadUtil {
                                      ,new FileName());
 			
 //			request.setCharacterEncoding("UTF-8"); --인코딩 타입 바꾸면서 필요 없어짐
-			
 			return fb = true;
-			
 			
 		}catch(Exception e){
 			System.out.println("FileUploadUtil.fileUpldad() >>> : " + e);
@@ -43,18 +41,15 @@ public class FileUploadUtil {
 		return m.getParameter(s);
 	}
 	
-	public Enumeration<String> getFileNames()
-	{
+	public Enumeration<String> getFileNames(){
 		Enumeration<String> en = m.getFileNames();
 		Vector<String> v = new Vector<String>();
 		
-		while (en.hasMoreElements())
-		{
+		while (en.hasMoreElements()){
 			String f = en.nextElement().toString();
 			logger.info("f 파일명 >> :" + f);
 			v.add(m.getFilesystemName(f));
 		}
-		
 		return v.elements();
 	}
 	

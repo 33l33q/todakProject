@@ -125,6 +125,13 @@
          
          NoticeVO nvo = sList.get(0);
          String i_hm_empnum = nvo.getHm_empnum();
+         
+         String rangeIndex = "";
+         
+         if(nvo.getBn_deptnum().equals("기타")) rangeIndex = nvo.getBn_divnum();
+         else if(!nvo.getBn_deptnum().equals("기타")) rangeIndex = nvo.getBn_deptnum();
+
+         if(rangeIndex.equals("기타")) rangeIndex = "전체";
    
          //System.out.println(n_hm_empnum + " : " + i_hm_empnum);
    %>
@@ -154,7 +161,7 @@
                   </tr>
                   <tr>
                      <td class="ac" style="border-right:2px solid #eeeeee;" align="center"><b>제목</b></td>
-                     <td colspan="2" style="border-right:2px solid #eeeeee;"><%=nvo.getBn_title() %></td>
+                     <td colspan="2" style="border-right:2px solid #eeeeee;"><b><%=rangeIndex %></b> <%=nvo.getBn_title() %></td>
                       <td class="ac" align="center" style="border-right:2px solid #eeeeee;"><b>조회수</b></td>
                      <td class="ac"><%=nvo.getBn_hitnum() %></td>
                   </tr>

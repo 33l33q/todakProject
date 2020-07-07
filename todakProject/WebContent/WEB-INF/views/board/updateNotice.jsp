@@ -14,6 +14,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>수정창</title>
+		<link rel="stylesheet" type="text/css" href="/include/css/default.css"/>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript"
 		src="../webedit/dist/js/service/HuskyEZCreator.js" charset="utf-8"></script>
@@ -102,13 +103,38 @@
 						oEditors.getById["bn_content"].exec("UPDATE_CONTENTS_FIELD", []);
 						$("#n_updateForm").submit();
 						
-						$("#n_updateForm").attr({
-							"method":"POST",
-							"action":"../board/updateNotice.td"
-						});
-						
-						$("#n_updateForm").submit();
+					
 					}
+			        
+			    	//공개범위 조정하기
+					var rangeIndex = $("#rangeIndex").val();
+					
+					if(rangeIndex == 98){
+						$("#bn_deptnum").val(rangeIndex);
+						$("#bn_divnum").val(rangeIndex);
+					}else{
+						if(rangeIndex <= 3){
+							$("#bn_deptnum").val("98");
+							$("#bn_divnum").val(rangeIndex);
+						}else{
+							$("#bn_deptnum").val(rangeIndex);
+							
+							if(rangeIndex < 7) $("#bn_divnum").val("00")
+							else if(rangeIndex < 10) $("#bn_divnum").val("01"); 
+							else if(rangeIndex < 11) $("#bn_divnum").val("02"); 
+							else if(rangeIndex < 12) $("#bn_divnum").val("03");
+							else if(rangeIndex < 17) $("#bn_divnum").val("98");
+						}
+					}
+					
+			        
+					$("#n_updateForm").attr({
+						"method":"POST",
+						"action":"../board/updateNotice.td"
+					});
+					
+					$("#n_updateForm").submit();
+					
 				});
 				
 		 		$("#selectNotice").click(function(){
@@ -149,24 +175,44 @@
          <div class="container">
 	         
 	<%
-	
-			//System.out.println(sManager.getUserID(session.getId()));
 			String hm_empnum = sManager.getUserID(session.getId());
-		
-			
 	%>
-			<form id="n_updateForm" name="n_updateForm" enctype="multipart/form-data">
+			
+		<div id="boardTit" align = "center"><h3>글수정</h3></div>
+		<form id="n_updateForm" name="n_updateForm" enctype="multipart/form-data">
 			<input type="hidden" name="hm_name" id="hm_name" value="<%=nvo.getHm_name() %>">
 			<input type="hidden" name="bn_num" id="bn_num" value="<%=nvo.getBn_num() %>">
 			<input type="hidden" name="hm_empnum" id="hm_empnum" value="<%=hm_empnum%>">	
-				<table align="center">
+				<table id="boardWrite" align="center">
 						<tr>
-							<td>작성자</td>
-							<td><%=nvo.getHm_name() %></td>
+							<td width="600">작성자</td>
+							<td><b><%=nvo.getHm_name() %></b></td>
+							
+							<td align="right">
+								<label>게시글 공개 범위</label>
+								<select id="rangeIndex" name="rangeIndex">
+									<option value="98">전체공지</option>
+									<option value="00" style="font-weight:bold">경영지원본부</option>
+									<option value="04">인재경영팀</option>
+									<option value="05">재무팀</option>
+									<option value="06">관리팀</option>
+									<option value="01" style="font-weight:bold">전략기획본부</option>
+									<option value="07">기획팀</option>
+									<option value="08">소통협력팀</option>
+									<option value="09">IT팀</option>
+									<option value="02" style="font-weight:bold">마케팅본부</option>
+									<option value="10">홍보팀</option>
+									<option value="03" style="font-weight:bold">나눔사업본부</option>
+									<option value="11">배분팀</option>
+									<option value="12">혁신사업팀</option>
+								</select>
+								<input type="hidden" name="bn_divnum" id="bn_divnum" >
+								<input type="hidden" name="bn_deptnum" id="bn_deptnum" >
+							</td>
 						</tr>
 						<tr>
 							<td>글제목</td>
-							<td><input size="70" type="text" id="bn_title" name="bn_title"  size="80" value="<%= nvo.getBn_title()%>"></td>
+							<td><input size="65" type="text" id="bn_title" name="bn_title"  size="80" value="<%= nvo.getBn_title()%>"></td>
 						</tr>
 						<tr>
 							<td>내용</td>
@@ -196,9 +242,8 @@
 					if(bn_file != null){
 	%>
 						<tr>
-							<td>첨부파일</td>
-							<td><%= bn_file %>
-							<input type="file" name="bn_file" id="bn_file" value="<%=nvo.getBn_file() %>"></td>
+							<td colspan = 2>첨부파일</td>
+							<td><input type="file" name="bn_file" id="bn_file" value=<%= bn_file %>></td>
 						</tr>
 	<%
 					}else{
@@ -209,22 +254,16 @@
 						</tr>
 	<%
 					}
-	
 	%>
-	
 							<td>
 						</tr>
 				</table>
-					<div align="center">
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="button" value="수정" class="but" id="updateNotice" name="updateNotice"/>
-						<input type="button" value="삭제" class="but" id="deleteNotice" name="deleteNotice"/>
+					<div class="noticesearch_align" align="right">
+						<input type="button" value="수정" class="button" id="updateNotice" name="updateNotice"/>
+						<input type="button" value="삭제" class="button" id="deleteNotice" name="deleteNotice"/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="button" value="목록" class="but" id="selectNotice" name="selectNotice"/>
+						<input type="button" value="목록" class="button" id="selectNotice" name="selectNotice"/>
 					</div>
-	
-					
 			</form>
          </div>
 	</body>

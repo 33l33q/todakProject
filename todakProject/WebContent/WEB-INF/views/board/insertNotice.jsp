@@ -12,6 +12,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>글쓰기 화면</title>
+		
+		<link rel="stylesheet" type="text/css" href="/include/css/default.css"/>
+		
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="../webedit/dist/js/service/HuskyEZCreator.js" charset="utf-8"></script>
 		<script type="text/javascript">
@@ -85,11 +88,9 @@
 							$("#bn_divnum").val(rangeIndex);
 						}else{
 							if(rangeIndex <= 3){
-								alert("본부공개 rangeIndex >>> " + rangeIndex);
 								$("#bn_deptnum").val("98");
 								$("#bn_divnum").val(rangeIndex);
 							}else{
-								alert("3. rangeIndex >>> " + rangeIndex);
 								$("#bn_deptnum").val(rangeIndex);
 								
 								if(rangeIndex < 7) $("#bn_divnum").val("00")
@@ -99,11 +100,9 @@
 								else if(rangeIndex < 17) $("#bn_divnum").val("98");
 							}
 						}
-
-						
 						
 						var hm_empnum = $("#hm_empnum").val();
-						alert("hm_empnum >>> : " + hm_empnum);
+						
 						$("#n_writeForm").attr({
 							"method":"POST",
 							"action":"../board/insertNotice.td"
@@ -202,8 +201,10 @@
 							<td><input type="file" name="bn_file" id="bn_file"></td>
 						</tr>
 					</table>
-						<input type="button" value="저장" class="but" id="insertNotice" name="insertNotice" />
-						<input type="button" value="목록" class="but" id="selectNotice" name="selectNotice"/>
+					<div class="noticesearch_align" align="right">
+						<input type="button" value="저장" class="button" id="insertNotice" name="insertNotice" />
+						<input type="button" value="목록" class="button" id="selectNotice" name="selectNotice"/>
+					</div>
 				</form>
 			</div>
          </div>
