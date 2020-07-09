@@ -40,8 +40,6 @@
 		        var windowH = 850;  // 창의 세로 길이
 		        var left = Math.ceil((window.screen.width - windowW)/2);
 		        var top = Math.ceil((window.screen.height - windowH)/2);
-
-
 		
 				document.loginForm.method="GET";
 				var url= "/etc/moveSignup.td";   

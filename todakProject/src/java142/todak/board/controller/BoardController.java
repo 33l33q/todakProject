@@ -37,17 +37,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/board")
 public class BoardController {
 
-	final static String NOTICE_GUBUN = "N";
-	final static String SUGGESTION_GUBUN = "S";
-	final static String SUREPLY_GUBUN = "R";
-	final static String SULIKE_GUBUN = "L";
-	final static String CHECK_GUBUN = "C";
-	
-	final static String N_PATH = "board//notice//";
-	final static String S_PATH = "board//suggetion//"; 
-	
+   final static String NOTICE_GUBUN = "N";
+   final static String SUGGESTION_GUBUN = "S";
+   final static String SUREPLY_GUBUN = "R";
+   final static String SULIKE_GUBUN = "L";
+   final static String CHECK_GUBUN = "C";
+   
+   final static String N_PATH = "board//notice//";
+   final static String S_PATH = "board//suggetion//"; 
+   
 
-	
+   
    Logger logger = Logger.getLogger(BoardController.class);
 
    @Autowired
@@ -370,18 +370,20 @@ public class BoardController {
    //건의사항 상세 출력하기
    @RequestMapping("/searchSuggestion")
    public String searchSuggestion(@ModelAttribute SuggestionVO svo, Model model, SuLikeVO slvo, @RequestParam("hm_empnum") String hm_empnum){
-      
       logger.info("(log)BoardController.searchSuggestion 시작 >>> ");
 
+      svo.setN_hm_empnum(hm_empnum);
+
+      int iFlag = 0;
+      
+      iFlag = boardService.updateSuggestionHit(svo);
+
+      logger.info("(log)BoardController.searchSuggestion 조회수 증가 >>> " + iFlag);
+      
       List<SuggestionVO> suggestionDetail = null;
       suggestionDetail = boardService.searchSuggestion(svo);
-      int iFlag = 0;
-      iFlag = boardService.updateSuggestionHit(svo);
-      
-      logger.info("(log)BoardController.searchSuggestion 조회수 증가 >>> " + iFlag);
 
       model.addAttribute("suggestionDetail",suggestionDetail);
-      
       
       //좋아요유무 확인해서 출력하기
       String bs_num = svo.getBs_num();
@@ -390,7 +392,6 @@ public class BoardController {
       
       slvo.setBs_num(bs_num);
       slvo.setHm_empnum(hm_empnum);
-      
       
       List<SuLikeVO> beforeLike = null;
       beforeLike = boardService.beforeSuLike(slvo);
@@ -630,7 +631,7 @@ public class BoardController {
    //공지사항 게시글 목록  및 검색
    @RequestMapping("/selectNotice") 
    public String selectBoardNotice(@ModelAttribute NoticeVO nvo, MemberVO mvo, Model model, 
-		   														HttpServletRequest request ) {
+                                                   HttpServletRequest request ) {
       
       logger.info("(log)BoardController.selectNotice 시작 >>> ");
       LoginSession sManager = LoginSession.getInstance();
@@ -758,7 +759,7 @@ public class BoardController {
       if(bFlag){
          /* 요건정리시 사진과 파일 둘 중 하나만 올리는 것이 가능하기 때문에
           * 각각 두 요소의 값이 들어있는 경우와 그렇지 않은 경우를 구분해서 DB에 값을 넣어야함
-    	 */
+        */
          Enumeration<String> en = fuu.getFileNames();
          
          String firstFile =  en.nextElement();
@@ -874,13 +875,13 @@ public class BoardController {
       n_hm_empnum = noticeWriteList.get(0).getHm_empnum();//게시글 작성자 사번 불러오기
       
       if(!n_hm_empnum.equals(hm_empnum)) {
-	      int iFlag = boardService.updateNoticeHit(nvo);
-	      logger.info("(log)BoardController.searchNotice 조회수 증가>>> " + iFlag);
-	      
-	      if(iFlag==0){
-	    	  url = "redirect:/board/selectNotice.td";
-	    	  return url;
-	      } 
+         int iFlag = boardService.updateNoticeHit(nvo);
+         logger.info("(log)BoardController.searchNotice 조회수 증가>>> " + iFlag);
+         
+         if(iFlag==0){
+            url = "redirect:/board/selectNotice.td";
+            return url;
+         } 
       } //게시글 작성자가 본인의 게시글에 들어가는 경우 조회수가 더해지지 않음
       
       List<NoticeVO> noticeSearchList = null;
@@ -893,7 +894,7 @@ public class BoardController {
       }else{
          url = "redirect:/board/selectNotice.td";
       }
-      return  url;	
+      return  url;   
    }//searchNotice 종료
 
    //파일다운로드 함수
@@ -929,9 +930,9 @@ public class BoardController {
       
       
       if(updateList.size() == 1){ 
-    	  url = "board/updateNotice";
+         url = "board/updateNotice";
       }else{
-    	  url = "redirect:" + "/board/selectNotice.td";
+         url = "redirect:" + "/board/selectNotice.td";
       }
       
       logger.info("(log)BoardController.updateSearchNotice 종료 >>> ");
@@ -962,7 +963,6 @@ public class BoardController {
             if(firstFile != null){
                firstFile = firstFile.replaceAll(FilePath.RELATIVE_PATH + N_PATH, "");
             }
-
             
             if(secondFile == null && firstFile != null){
                
@@ -1055,7 +1055,7 @@ public class BoardController {
       
       model.addAttribute("hm_empnum",hm_empnum);
       
-      return "redirect:" + "/board/selectNotice.td";
+      return "redirect:/board/selectNotice.td";
    }
 
    
@@ -1072,9 +1072,7 @@ public class BoardController {
       
       model.addAttribute("mList", mList);
       model.addAttribute("bn_num",bn_num);
-      
-   
-      
+
       return "board/checkNotice";
    }
    

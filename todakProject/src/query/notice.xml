@@ -45,22 +45,22 @@
 	                              <if test = "findIndex != null and findIndex != '' ">
 	                             	 <trim prefix="AND" prefixOverrides="AND">
 		                                  <if test="findIndex=='bn_title'">
-		                                    <![CDATA[BN_TITLE LIKE '%'||#{keyword}||'%']]>            
+		                                    <![CDATA[bn_title LIKE '%'||#{keyword}||'%']]>            
 		                                  </if>
 		                                  <if test="findIndex=='bn_content'">
-		                                     <![CDATA[AND BN_CONTENT LIKE '%'||#{keyword}||'%']]>   
+		                                     <![CDATA[AND bn_content LIKE '%'||#{keyword}||'%']]>   
 		                                  </if>
 		                                  <if test="findIndex=='hm_name'">
-		                                     <![CDATA[AND HM_NAME LIKE '%'||#{keyword}||'%']]>
+		                                     <![CDATA[AND hm_name LIKE '%'||#{keyword}||'%']]>
 		                                  </if>
 		                                  <if test="findIndex=='bn_deptnum'">
-		                                     <![CDATA[AND B.CD_NAME LIKE '%'||#{keyword}||'%']]>   
+		                                     <![CDATA[AND B.cd_name LIKE '%'||#{keyword}||'%']]>   
 		                                  </if>
 		                                  <if test="findIndex=='bn_divnum'">
-		                                     <![CDATA[AND C.CD_NAME LIKE '%'||#{keyword}||'%']]>   
+		                                     <![CDATA[AND C.cd_name LIKE '%'||#{keyword}||'%']]>   
 		                                  </if>
 		                                  <if test="findIndex=='hm_empnum'">
-		                                     <![CDATA[AND A.HM_EMPNUM LIKE '%'||#{keyword}||'%']]>   
+		                                     <![CDATA[AND A.hm_empnum LIKE '%'||#{keyword}||'%']]>   
 		                                  </if>
 	                                 </trim>
 	                            </if>
@@ -75,7 +75,7 @@
    <select id="searchWrite" parameterType="nvo" resultType="nvo">
       SELECT    A.HM_EMPNUM      HM_EMPNUM
       FROM     	BOARD_NOTICE A
-      WHERE     A.BN_NUM = #{ bn_num }
+      WHERE     A.BN_NUM = #{bn_num}
       AND       A.BN_DELETEYN = 'Y'
    </select>
    
@@ -115,7 +115,7 @@
             	HM_NAME,
             	HM_DEPTNUM
       FROM      HUMAN_MEMBER
-      WHERE 	HM_EMPNUM = #{HM_EMPNUM}
+      WHERE 	HM_EMPNUM = #{hm_empnum}
    
    </select>
    <!-- insert : 공지사항 작성 -->
@@ -136,16 +136,16 @@
 	                           BN_INSERTDATE,
 	                           BN_UPDATEDATE
       )VALUES(
-	                           #{bn_num, jdbcType=VARCHAR},
-	                           #{hm_empnum, jdbcType=VARCHAR},
-	                           #{hm_name, jdbcType=VARCHAR},
-	                           #{hm_duty, jdbcType=VARCHAR},
-	                           #{bn_deptnum, jdbcType=VARCHAR},
-	                           #{bn_divnum, jdbcType=VARCHAR},
-	                           #{bn_title, jdbcType=VARCHAR},
-	                           #{bn_content, jdbcType=VARCHAR}, 
-	                           #{bn_image, jdbcType=VARCHAR},
-	                           #{bn_file, jdbcType=VARCHAR},
+	                           #{bn_num},
+	                           #{hm_empnum},
+	                           #{hm_name},
+	                           #{hm_duty},
+	                           #{bn_deptnum},
+	                           #{bn_divnum},
+	                           #{bn_title},
+	                           #{bn_content}, 
+	                           #{bn_image},
+	                           #{bn_file},
 	                           'Y',
 	                           TO_CHAR(SYSDATE,'YYYYMMDD'),
 	                           TO_CHAR(SYSDATE,'YYYYMMDD')
@@ -155,15 +155,15 @@
    <update id="updateNotice" parameterType="nvo">
       /* Mapper - updateNotice */
       UPDATE BOARD_NOTICE
-      SET    BN_TITLE 		= #{bn_title, jdbcType=VARCHAR}
-            ,BN_CONTENT		= #{bn_content, jdbcType=VARCHAR}
-            ,BN_DEPTNUM 	= #{bn_deptnum, jdbcType=VARCHAR}
-            ,BN_DIVNUM 		= #{bn_divnum, jdbcType=VARCHAR}
-            ,BN_IMAGE 		= #{bn_image, jdbcType=VARCHAR}
-            ,BN_FILE 		= #{bn_file, jdbcType=VARCHAR}
+      SET    BN_TITLE 		= #{bn_title}
+            ,BN_CONTENT		= #{bn_content}
+            ,BN_DEPTNUM 	= #{bn_deptnum}
+            ,BN_DIVNUM 		= #{bn_divnum}
+            ,BN_IMAGE 		= #{bn_image}
+            ,BN_FILE 		= #{bn_file}
             ,BN_UPDATEDATE 	= TO_CHAR(SYSDATE,'YYYYMMDD')
       WHERE  BN_DELETEYN 	= 'Y'
-      AND    BN_NUM 		= #{bn_num, jdbcType=VARCHAR}
+      AND    BN_NUM 		= #{bn_num}
    </update>
    
    <!-- delete : 공지사항 삭제하기 -->
@@ -172,7 +172,7 @@
       UPDATE    BOARD_NOTICE
       SET   	BN_DELETEYN = 'N'
       WHERE  	BN_DELETEYN = 'Y'
-      AND      	BN_NUM = #{bn_num, jdbcType=VARCHAR}
+      AND      	BN_NUM = #{bn_num}
    </update>
    
    <!-- 공지사항 확인 채번 -->
@@ -191,11 +191,11 @@
                                  BN_CHECKDATE,
                                  BN_CHECKYN
       )SELECT
-                                 #{bn_checknum, jdbcType=VARCHAR},
-                                 #{bn_num, jdbcType=VARCHAR},
-                                 #{hm_empnum, jdbcType=VARCHAR},
-                                 #{hm_name, JDBCTYPE=VARCHAR},
-                                 #{hm_deptnum, JDBCTYPE=VARCHAR},
+                                 #{bn_checknum},
+                                 #{bn_num},
+                                 #{hm_empnum},
+                                 #{hm_name},
+                                 #{hm_deptnum},
                                  TO_CHAR(SYSDATE,'YYYYMMDD'),
                            		 'Y'
       FROM DUAL
@@ -205,8 +205,8 @@
                               BN_NUM
                       FROM    BOARD_NOCHECK
                       WHERE   1 = 1
-                      AND     HM_EMPNUM = #{hm_empnum, jdbcType=VARCHAR}
-                      AND     BN_NUM = #{bn_num, jdbcType=VARCHAR}
+                      AND     HM_EMPNUM = #{hm_empnum}
+                      AND     BN_NUM = #{bn_num}
       )
                                                    
    </insert>   
@@ -221,9 +221,8 @@
               		  TO_DATE(A.BN_CHECKDATE, 'YYYY-MM-DD')  BN_CHECKDATE
 		      FROM    BOARD_NOCHECK A, CODE B
 		      WHERE   B.CD_CODE IN (SELECT SUBSTR(A.HM_DEPTNUM ,-2,2) FROM BOARD_NOCHECK)
-		      AND     A.BN_NUM = #{bn_num, jdbcType=VARCHAR}
+		      AND     A.BN_NUM = #{bn_num}
 		      ORDER BY  BN_CHECKNUM ) C
    </select>
    
 </mapper>
-
