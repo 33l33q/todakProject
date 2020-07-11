@@ -10,6 +10,8 @@ public class SuReplyVO extends SuggestionVO {
 	private	String	bsr_insertdate;
 	private	String	bsr_updatedate;
 	
+	private String  rownum;
+	
 	public String getBsr_num() {
 		return bsr_num;
 	}
@@ -51,6 +53,12 @@ public class SuReplyVO extends SuggestionVO {
 	}
 	public void setBsr_updatedate(String bsr_updatedate) {
 		this.bsr_updatedate = bsr_updatedate;
+	}
+	public String getRownum() {
+		return rownum;
+	}
+	public void setRownum(String rownum) {
+		this.rownum = rownum;
 	}
 
 	

@@ -110,7 +110,6 @@
       <if test = "bs_image !=''">
             	,BS_IMAGE = #{bs_image} 
       </if>
-            
       WHERE   	BS_DELETEYN = 'Y'
       AND      	BS_NUM = #{bs_num} 
    </update>
@@ -125,14 +124,16 @@
    
    <!-- 건의사항 댓글 전체조회 -->
    <select id="selectSuReply" parameterType="srvo" resultType="srvo">
-      SELECT   	A.BSR_NUM         BSR_NUM,
-            	A.HM_EMPNUM       HM_EMPNUM,
-            	A.BSR_CONTENT     BSR_CONTENT,
-            	TO_DATE(A.BSR_INSERTDATE, 'YYYY-MM-DD')  BSR_INSERTDATE
-      FROM   	BOARD_SUREPLY A
-      WHERE   	BS_NUM = #{bs_num} 
-      AND      	BSR_DELETEYN = 'Y'
-      ORDER BY BSR_NUM 
+      SELECT   	ROWNUM
+     			,SR.*
+      FROM		( SELECT	A.BSR_NUM         BSR_NUM,
+			            	A.HM_EMPNUM       HM_EMPNUM,
+			            	A.BSR_CONTENT     BSR_CONTENT,
+			            	TO_DATE(A.BSR_INSERTDATE, 'YYYY-MM-DD')  BSR_INSERTDATE
+			      FROM   	BOARD_SUREPLY A
+			      WHERE   	BS_NUM = #{bs_num} 
+			      AND      	BSR_DELETEYN = 'Y'
+			      ORDER BY BSR_NUM  ) SR		
    </select>
 
 

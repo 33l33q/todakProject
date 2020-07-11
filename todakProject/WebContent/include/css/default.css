@@ -283,12 +283,13 @@ input[type=file] {
 
 
 .reply {
-	width:85%;	
+	width:95%;	
 	margin:0 auto;
+	padding : 0;
 }
 
 .reply_table {
-	width:80%;
+	width:90%;
 	border-top:3px solid #eeeeee;
 	border-bottom:3px solid #eeeeee;
 }

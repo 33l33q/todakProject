@@ -1,7 +1,6 @@
 package java142.todak.human.vo;
 
 
-
 public class ApptVO extends PagingVO {
 	private String hpa_tablenum;
 	private String hpa_empnum;

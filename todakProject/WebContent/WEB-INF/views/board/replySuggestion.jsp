@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page import="java142.todak.board.controller.BoardController"  %>
 <%@ page import="java142.todak.common.FileReadUtil"  %>
@@ -20,10 +19,8 @@
       $(function(){
          /*기본 덧글 목록 불러오가*/
          var bs_num = $("#bs_num").val();
-         
          var n_hm_empnum = $("#n_hm_empnum").val();
-         
-          
+ 
          listAll(bs_num);
          
          /*덧글 내용 저장 이벤트*/
@@ -157,7 +154,7 @@
 
       //리스트 요청 함수
       function listAll(bs_num){
-         $("#comment_list").html("");
+         $("#reply_list").html("");
          var url = "/board/all/" + bs_num + ".td";
          $.getJSON(url, function(data){
             console.log(data.length);
@@ -166,8 +163,10 @@
                var bsr_num = this.bsr_num;
                var hm_empnum = this.hm_empnum;
                var bsr_content = this.bsr_content;
-               var bsr_insertdate = this.bsr_insertdate
-               addNewItem(bsr_num,hm_empnum,bsr_content,bsr_insertdate);
+               var bsr_insertdate = this.bsr_insertdate;
+               var rownum = this.rownum;
+               var n_hm_empnum = $("#n_hm_empnum").val();
+               addNewItem(bsr_num,hm_empnum,bsr_content,bsr_insertdate,rownum,n_hm_empnum);
             });
             
          }).fail(function(){
@@ -176,7 +175,7 @@
       }//end of listAll
       
       /*새로운 글을 화면에 추가하기 위한 함수*/
-      function addNewItem(bsr_num,hm_empnum,bsr_content,bsr_insertdate){
+      function addNewItem(bsr_num,hm_empnum,bsr_content,bsr_insertdate,rownum,n_hm_empnum){
          //새로운 글이 추가될 li 태그 객체
          var new_li = $("<li>");
          new_li.attr("data-num", bsr_num);
@@ -187,9 +186,18 @@
          writer_p.addClass("writer");
          
          //작성일시
+         var rownum_span = $("<span>");
+         rownum_span.html("<b>" + rownum + "</b> /  ");
+         
+         //작성일시
          var date_span = $("<span>");
          date_span.html(bsr_insertdate.substr(0,10) + " ");
    
+         //내용
+         var content_p = $("<p>");
+         content_p.addClass("con");
+         content_p.html(bsr_content);
+        
          //수정하기 버튼
          var up_input = $("<input>");
          up_input.attr({"type" : "button", "value" : "수정하기", "class" : "button", "style" : "float:right;"});
@@ -200,25 +208,27 @@
          del_input.attr({"type" : "button", "value": "삭제하기", "class" : "button", "style" : "float:right;"});
          del_input.addClass("delete_btn");
          
-         //내용
-         var content_p = $("<p>");
-         content_p.addClass("con");
-         content_p.html(bsr_content);
-         
-         //조립하기
-         writer_p.append(date_span).append(up_input).append(del_input)
-         new_li.append(writer_p).append(content_p);
-         $("#comment_list").append(new_li);
+         if(hm_empnum == n_hm_empnum){
+        	 new_li.attr("style", "background-color:Seashell");
+             //조립하기
+             writer_p.append(rownum_span).append(date_span).append(up_input).append(del_input)
+             new_li.append(writer_p).append(content_p);
+             $("#reply_list").append(new_li);
+             
+      //       style="background-color:Seashell"
+             
+         }else{
+             writer_p.append(rownum_span).append(date_span)
+             new_li.append(writer_p).append(content_p);
+             $("#reply_list").append(new_li);
+         }
       }
       
       /*input 태그들에 대한 초기화 함수*/
       function dataReset(){
          $("#bsr_content").val("");
       }
-      
-
-      
-      </script>
+ 	 </script>
    </head>
    <body>   
       <div id="replyContainer" align="center">
@@ -239,15 +249,14 @@
                  	 		<textarea name="bsr_content" id="bsr_content" cols="60" rows="3"></textarea>
                  	 	</td>
                  	 	<td align="center">
-                  			<input type="button" class="button" id="replyInsert" 
-                  				   value="저장하기" style="width:70px;height:70px;"/>
+                  			<input type="button" class="button" id="replyInsert" value="저장하기" style="width:70px;height:70px;"/>
                   		</td>
                   	</tr>
             	</table>
             	<br><br>
             </div>
    		      	<div class="reply" align="center">
-            		<ul class="reply" id="comment_list"></ul>
+            		<ul class="reply" id="reply_list"></ul>
          		</div>
          </div>
          
