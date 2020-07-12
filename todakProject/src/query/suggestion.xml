@@ -9,7 +9,7 @@
 		FROM(
 				SELECT
 						AA.*,
-						CEIL(ROW_NUMBER() OVER(ORDER BY ROWNUM)/#{pageSize} ) PAGENO,
+						CEIL(ROW_NUMBER() OVER(ORDER BY ROWNUM)/#{pageSize, jdbcType=VARCHAR} ) PAGENO,
 						COUNT(BS_NUM) OVER() AS TOTALCOUNT 
 				FROM(
 						SELECT 	ROWNUM
@@ -36,13 +36,13 @@
 							    <if test = "findIndex != null and findIndex != '' ">
 						            <trim prefix="AND" prefixOverrides="AND">
 						                <if test="findIndex=='bs_title'">
-						                   <![CDATA[AND A.bs_title LIKE '%'||#{keyword}||'%']]>            
+						                   <![CDATA[AND A.bs_title LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%']]>            
 						                 </if>
 						                 <if test="findIndex=='bs_content'">
-						                    <![CDATA[AND A.bs_content LIKE '%'||#{keyword}||'%']]>   
+						                    <![CDATA[AND A.bs_content LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%']]>   
 						                 </if>
 						                 	<if test="findIndex=='hm_empnum'">
-										    <![CDATA[AND A.hm_empnum LIKE '%'||#{keyword}||'%']]>   
+										    <![CDATA[AND A.hm_empnum LIKE '%'||#{keyword, jdbcType=VARCHAR}||'%']]>   
 										 </if>
 						             </trim>
 						        </if>
@@ -50,7 +50,7 @@
 								) X
 						)AA
 					)
-		WHERE		PAGENO = #{curPage}		
+		WHERE		PAGENO = #{curPage, jdbcType=VARCHAR}		
 	</select>
    
    <select id="searchSuggestion" resultType="svo">
@@ -63,15 +63,15 @@
             	TO_DATE(A.BS_INSERTDATE, 'YYYY-MM-DD')  BS_INSERTDATE
       FROM   	BOARD_SUGGESTION A
       WHERE   	A.BS_DELETEYN = 'Y'
-      AND    	A.BS_NUM = #{bs_num} 
+      AND    	A.BS_NUM = #{bs_num, jdbcType=VARCHAR} 
    </select>
    
       <!--  조회수 증가  -->
    <update id="updateSuggestionHit" parameterType="String">
         UPDATE  BOARD_SUGGESTION
         SET    	BS_HITNUM 	= BS_HITNUM + 1
-        WHERE   BS_NUM      = #{bs_num}
-        AND     HM_EMPNUM 	!= #{n_hm_empnum} 
+        WHERE   BS_NUM      = #{bs_num, jdbcType=VARCHAR}
+        AND     HM_EMPNUM 	!= #{n_hm_empnum, jdbcType=VARCHAR} 
    </update>
    
    
@@ -90,11 +90,11 @@
 	       BS_UPDATEDATE,
 	       BS_DELETEYN   
       )VALUES(
-           #{bs_num},
-           #{hm_empnum},
-           #{bs_title},
-           #{bs_content},
-           #{bs_image},
+           #{bs_num, jdbcType=VARCHAR},
+           #{hm_empnum, jdbcType=VARCHAR},
+           #{bs_title, jdbcType=VARCHAR},
+           #{bs_content, jdbcType=VARCHAR},
+           #{bs_image, jdbcType=VARCHAR},
            TO_CHAR(SYSDATE,'YYYYMMDD'),
            TO_CHAR(SYSDATE,'YYYYMMDD'),
            'Y'
@@ -104,14 +104,14 @@
    <!-- 건의사항 수정 -->
    <update id="updateSuggestion" parameterType="svo">
       UPDATE    BOARD_SUGGESTION
-      SET    	BS_TITLE       = #{bs_title} 
-            	,BS_CONTENT    = #{bs_content} 
+      SET    	BS_TITLE       = #{bs_title, jdbcType=VARCHAR} 
+            	,BS_CONTENT    = #{bs_content, jdbcType=VARCHAR} 
             	,BS_UPDATEDATE    = TO_CHAR(SYSDATE,'YYYYMMDD')
       <if test = "bs_image !=''">
-            	,BS_IMAGE = #{bs_image} 
+            	,BS_IMAGE = #{bs_image, jdbcType=VARCHAR} 
       </if>
       WHERE   	BS_DELETEYN = 'Y'
-      AND      	BS_NUM = #{bs_num} 
+      AND      	BS_NUM = #{bs_num, jdbcType=VARCHAR} 
    </update>
    
    <!-- 건의사항 삭제 -->
@@ -119,7 +119,7 @@
       UPDATE    BOARD_SUGGESTION
       SET    	BS_DELETEYN = 'N'
       WHERE   	BS_DELETEYN = 'Y'
-      AND      	BS_NUM = #{bs_num} 
+      AND      	BS_NUM = #{bs_num, jdbcType=VARCHAR} 
    </update>
    
    <!-- 건의사항 댓글 전체조회 -->
@@ -131,7 +131,7 @@
 			            	A.BSR_CONTENT     BSR_CONTENT,
 			            	TO_DATE(A.BSR_INSERTDATE, 'YYYY-MM-DD')  BSR_INSERTDATE
 			      FROM   	BOARD_SUREPLY A
-			      WHERE   	BS_NUM = #{bs_num} 
+			      WHERE   	BS_NUM = #{bs_num, jdbcType=VARCHAR} 
 			      AND      	BSR_DELETEYN = 'Y'
 			      ORDER BY BSR_NUM  ) SR		
    </select>
@@ -152,10 +152,10 @@
 		   BSR_INSERTDATE,
 		   BSR_UPDATEDATE
 	   )VALUES(
-		   #{bsr_num},
-		   #{bs_num},
-		   #{hm_empnum},
-		   #{bsr_content},
+		   #{bsr_num, jdbcType=VARCHAR},
+		   #{bs_num, jdbcType=VARCHAR},
+		   #{hm_empnum, jdbcType=VARCHAR},
+		   #{bsr_content, jdbcType=VARCHAR},
 		   'Y',
 		   TO_CHAR(SYSDATE,'YYYYMMDD'),
 		   TO_CHAR(SYSDATE,'YYYYMMDD')
@@ -166,11 +166,11 @@
    <!-- 건의사항 댓글 수정하기 -->
    <update id="updateSuReply" parameterType="srvo">
       UPDATE    BOARD_SUREPLY
-      SET      	BSR_CONTENT  	= #{bsr_content} 
+      SET      	BSR_CONTENT  	= #{bsr_content, jdbcType=VARCHAR} 
                ,BSR_UPDATEDATE	= TO_CHAR(SYSDATE,'YYYYMMDD')      
       WHERE   	BSR_DELETEYN  	= 'Y'
-      AND     	BSR_NUM       	= #{bsr_num} 
-      AND      (HM_EMPNUM = #{hm_empnum}  or  'H000000000000' =  #{hm_empnum} )
+      AND     	BSR_NUM       	= #{bsr_num, jdbcType=VARCHAR} 
+      AND      (HM_EMPNUM = #{hm_empnum, jdbcType=VARCHAR}  or  'H000000000000' =  #{hm_empnum, jdbcType=VARCHAR} )
    
    </update>
    
@@ -178,8 +178,8 @@
    <delete id="deleteSuReply" parameterType="srvo">
       DELETE    BOARD_SUREPLY
       WHERE   	BSR_DELETEYN = 'Y'
-      AND      	BSR_NUM      = #{bsr_num} 
-      AND      	(HM_EMPNUM   = #{hm_empnum}  or  'H000000000000' =  #{hm_empnum} )
+      AND      	BSR_NUM      = #{bsr_num, jdbcType=VARCHAR} 
+      AND      	(HM_EMPNUM   = #{hm_empnum, jdbcType=VARCHAR}  or  'H000000000000' =  #{hm_empnum, jdbcType=VARCHAR} )
    </delete>
    
    
@@ -189,7 +189,7 @@
       SELECT    COUNT(BSL_LIKEYN) BSL_LIKEYN
       FROM    	BOARD_SULIKE
       WHERE    	BSL_LIKEYN   = 'Y'
-      AND      	BS_NUM       = #{bs_num} 
+      AND      	BS_NUM       = #{bs_num, jdbcType=VARCHAR} 
    </select>
    
    <!-- 건의사항 좋아요 유무 확인하기 -->
@@ -197,8 +197,8 @@
       SELECT    COUNT(BSL_LIKEYN) BSL_LIKEYN
       FROM    	BOARD_SULIKE
       WHERE   	BSL_LIKEYN   = 'Y'
-      AND      	BS_NUM       = #{bs_num} 
-      AND      	HM_EMPNUM    = #{hm_empnum} 
+      AND      	BS_NUM       = #{bs_num, jdbcType=VARCHAR} 
+      AND      	HM_EMPNUM    = #{hm_empnum, jdbcType=VARCHAR} 
    </select>
    
    <!-- 건의사항 좋아요 채번 -->
@@ -214,9 +214,9 @@
 	        HM_EMPNUM,
 	        BSL_LIKEYN      
       )SELECT
-           #{bsl_num},
-           #{bs_num},
-           #{hm_empnum},
+           #{bsl_num, jdbcType=VARCHAR},
+           #{bs_num, jdbcType=VARCHAR},
+           #{hm_empnum, jdbcType=VARCHAR},
            'Y'
       FROM DUAL
       WHERE NOT EXISTS (   
@@ -227,15 +227,15 @@
 						BSL_DISLIKEYN   
 		         FROM	BOARD_SULIKE
 		         WHERE  1 = 1
-		         AND    BS_NUM 		= #{bs_num} 
-		         AND   	HM_EMPNUM	= #{hm_empnum} )
+		         AND    BS_NUM 		= #{bs_num, jdbcType=VARCHAR} 
+		         AND   	HM_EMPNUM	= #{hm_empnum, jdbcType=VARCHAR} )
    </insert>
    
    <!-- 건의사항 좋아요 취소하기 -->
    <delete id="unCheckSuLike" parameterType="slvo">
       DELETE FROM BOARD_SULIKE
-      WHERE   BS_NUM     = #{bs_num} 
-      AND     HM_EMPNUM  = #{hm_empnum} 
+      WHERE   BS_NUM     = #{bs_num, jdbcType=VARCHAR} 
+      AND     HM_EMPNUM  = #{hm_empnum, jdbcType=VARCHAR} 
       AND     BSL_LIKEYN = 'Y'
    </delete>
    
@@ -244,7 +244,7 @@
       SELECT    COUNT(BSL_DISLIKEYN) BSL_DISLIKEYN
       FROM    	BOARD_SULIKE
       WHERE   	BSL_DISLIKEYN = 'Y'
-      AND      	BS_NUM        = #{bs_num} 
+      AND      	BS_NUM        = #{bs_num, jdbcType=VARCHAR} 
    </select>
    
    <!-- 건의사항 비추천 유무 확인하기 -->
@@ -252,8 +252,8 @@
       SELECT   COUNT(BSL_DISLIKEYN) BSL_DISLIKEYN
       FROM     BOARD_SULIKE
       WHERE    BSL_DISLIKEYN   = 'Y'
-      AND      BS_NUM          = #{bs_num} 
-      AND      HM_EMPNUM       = #{hm_empnum} 
+      AND      BS_NUM          = #{bs_num, jdbcType=VARCHAR} 
+      AND      HM_EMPNUM       = #{hm_empnum, jdbcType=VARCHAR} 
    </select>
 
    <!-- 건의사항 비추천 버튼 누르기 -->
@@ -265,9 +265,9 @@
 	      HM_EMPNUM,
 	      BSL_DISLIKEYN      
       )SELECT
-	      #{bsl_num},
-	      #{bs_num},
-	      #{hm_empnum},
+	      #{bsl_num, jdbcType=VARCHAR},
+	      #{bs_num, jdbcType=VARCHAR},
+	      #{hm_empnum, jdbcType=VARCHAR},
 	      'Y'
       FROM DUAL
       WHERE NOT EXISTS (
@@ -278,16 +278,16 @@
 			           	BSL_LIKEYN   
 		         FROM   BOARD_SULIKE
 		         WHERE  1 = 1
-		         AND    BS_NUM    = #{bs_num} 
-		         AND    HM_EMPNUM = #{hm_empnum} )
+		         AND    BS_NUM    = #{bs_num, jdbcType=VARCHAR} 
+		         AND    HM_EMPNUM = #{hm_empnum, jdbcType=VARCHAR} )
                
    </insert>
    
    <!-- 건의사항 비추천 취소하기 -->
    <delete id="unCheckSuDislike" parameterType="slvo">
      DELETE FROM BOARD_SULIKE
-     WHERE   BS_NUM        = #{bs_num} 
-     AND     HM_EMPNUM     = #{hm_empnum} 
+     WHERE   BS_NUM        = #{bs_num, jdbcType=VARCHAR} 
+     AND     HM_EMPNUM     = #{hm_empnum, jdbcType=VARCHAR} 
      AND     BSL_DISLIKEYN = 'Y'
    </delete>
 </mapper>
