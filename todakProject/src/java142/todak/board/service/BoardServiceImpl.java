@@ -297,8 +297,6 @@ public class BoardServiceImpl implements BoardService {
 		return iFlag;
 	}
 	
-	
-
 	@Override
 	public List<SuLikeVO> countSuDislike(SuLikeVO slvo) {
 		logger.info("(log)BoardServiceImpl.countSuDislike 진입");

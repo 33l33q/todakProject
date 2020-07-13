@@ -54,8 +54,9 @@ public class BoardController {
    private BoardService boardService;
 
 
-   //좋아요수세기
-   @RequestMapping(value="/countSuLike", method = RequestMethod.POST, produces = "application/json")
+   //추천수세기
+   @RequestMapping(value="/countSuLike", method = RequestMethod.POST,
+		   								produces = "application/json")
    @ResponseBody
    public ResponseEntity<String> countSuLike(@RequestBody SuLikeVO slvo){
       logger.info("(log)BoardController.countSuLike 진입"); 
@@ -80,7 +81,7 @@ public class BoardController {
       return entity;
    }//end of selectSuReply
    
-   //좋아요기능 구현
+     //추천기능 구현
      @ResponseBody
      @RequestMapping(value="/checkLike", method = RequestMethod.POST, produces = "application/json")
       public ResponseEntity<String> checkLike(@RequestBody SuLikeVO slvo){
@@ -89,13 +90,13 @@ public class BoardController {
          List<SuLikeVO> list = boardService.chaebunSuLike();
          
          if(list.size() == 1){
-            String bsl_num = ChaebunUtils.cNum(list.get(0).getBsl_num(), SUREPLY_GUBUN);
+            String bsl_num = ChaebunUtils.cNum(list.get(0).getBsl_num(), SUREPLY_GUBUN);//공통클래스로 채번생성
             slvo.setBsl_num(bsl_num);
          }
          
-         String bs_num = slvo.getBs_num();
+         String bs_num = slvo.getBs_num(); //채번을 통해 primary값인 추천 번호 생성
          
-         logger.info("좋아요 >>> " + slvo.getBsl_num());
+         logger.info("추천 >>> " + slvo.getBsl_num());
          logger.info("글번호 bs_num >>> " + bs_num);
          
          ResponseEntity<String> entity = null;
@@ -160,7 +161,7 @@ public class BoardController {
          
          String bs_num = slvo.getBs_num();
          
-         logger.info("좋아요 >>> " + slvo.getBsl_num());
+         logger.info("추천 >>> " + slvo.getBsl_num());
          logger.info("글번호 bs_num >>> " + bs_num);
          
          ResponseEntity<String> entity = null;
@@ -369,13 +370,13 @@ public class BoardController {
    
    //건의사항 상세 출력하기
    @RequestMapping("/searchSuggestion")
-   public String searchSuggestion(@ModelAttribute SuggestionVO svo, Model model, SuLikeVO slvo, @RequestParam("hm_empnum") String hm_empnum){
+   public String searchSuggestion(@ModelAttribute SuggestionVO svo, Model model, 
+		   				SuLikeVO slvo, @RequestParam("hm_empnum") String hm_empnum){
       logger.info("(log)BoardController.searchSuggestion 시작 >>> ");
 
       svo.setN_hm_empnum(hm_empnum);
 
       int iFlag = 0;
-      
       iFlag = boardService.updateSuggestionHit(svo);
 
       logger.info("(log)BoardController.searchSuggestion 조회수 증가 >>> " + iFlag);
@@ -385,7 +386,7 @@ public class BoardController {
 
       model.addAttribute("suggestionDetail",suggestionDetail);
       
-      //좋아요유무 확인해서 출력하기
+      //추천유무 확인해서 출력하기
       String bs_num = svo.getBs_num();
       
       logger.info("hm_empnum >>>> : " + hm_empnum );
@@ -400,7 +401,6 @@ public class BoardController {
       
       model.addAttribute("bsl_likeYN",bsl_likeYN);
       
-      
       //비추 유무 확인해서 출력하기
       List<SuLikeVO> beforeSuDislike = null;
       beforeSuDislike = boardService.beforeSuDislike(slvo);
@@ -411,10 +411,9 @@ public class BoardController {
       
       String url = "board/searchSuggestion";
       
-      logger.info("(log)BoardController.searchSuggestion 시작 >>> ");
-      
+      logger.info("(log)BoardController.searchSuggestion 종료 >>> ");
+     
       return url;
-      
    }
    
    //건의사항 게시글 삭제하기
@@ -422,9 +421,7 @@ public class BoardController {
    public String deleteSuggestion(@ModelAttribute SuggestionVO svo, Model model){
       
       int result = 0;
-      
       String hm_empnum = svo.getHm_empnum();
-      
       result = boardService.deleteSuggestion(svo);
       
       if(result == 1){
@@ -435,7 +432,7 @@ public class BoardController {
       
       model.addAttribute("hm_empnum",hm_empnum);
       
-      return "redirect:" + "/board/selectSuggestion.td";
+      return "redirect:/board/selectSuggestion.td";
    }
    
    //건의사항 게시글 수정페이지로 이동
@@ -456,7 +453,7 @@ public class BoardController {
          url = "board/updateSuggestion";
       }else{
          model.addAttribute("hm_empnum",svo.getHm_empnum());
-         url = "redirect:" + "/board/selectSuggestion.td";
+         url = "redirect:/board/selectSuggestion.td";
       }
       
       logger.info("(log)BoardController.updateSearchSuggestion 종료 >>> ");
@@ -534,7 +531,7 @@ public class BoardController {
       model.addAttribute("hm_empnum",hm_empnum);
       
       
-      return "redirect:" + "/board/searchSuggestion.td?bs_num=" + bs_num;
+      return "redirect:/board/searchSuggestion.td?bs_num=" + bs_num;
    }
    
    //건의사항 파일다운로드 함수
@@ -932,7 +929,7 @@ public class BoardController {
       if(updateList.size() == 1){ 
          url = "board/updateNotice";
       }else{
-         url = "redirect:" + "/board/selectNotice.td";
+         url = "redirect:/board/selectNotice.td";
       }
       
       logger.info("(log)BoardController.updateSearchNotice 종료 >>> ");

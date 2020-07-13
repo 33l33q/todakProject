@@ -63,7 +63,7 @@
 	               .submit();
 	          });
 	          
-	         	//좋아요 미리 표시하기
+	         	//추천 미리 표시하기
 	           function beforeCheck(bsl_likeYN){
 	              if(bsl_likeYN == 1) {
 	                  $("#like").prop("src", "../resources/like.png");
@@ -72,7 +72,7 @@
 	              }
 	           }
 	
-	           //좋아요 갯수세기
+	           //추천 갯수세기
 	           function countLike(bs_num){
 	              
 	              var countLike = $("countLike");
@@ -104,7 +104,7 @@
 	           }
 	          
 	           
-	           //좋아요 눌렀을때
+	           //추천 눌렀을때
 	           $(".like").on("click", function () {
 	               var that = $(".like");
 	

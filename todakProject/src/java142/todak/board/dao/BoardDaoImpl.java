@@ -147,11 +147,13 @@ public class BoardDaoImpl implements BoardDao {
 	
 	/*****************건의사항 게시판 추비추**************************/
 	
+	//추천 채번
 	@Override
 	public List<SuLikeVO> chaebunSuLike() {
 		return session.selectOne("chaebunSuLike");
 	}
 	
+	//추천갯수세기
 	@Override
 	public List<SuLikeVO> countSuLike(SuLikeVO slvo) {
 		return session.selectList("countSuLike");
@@ -162,16 +164,19 @@ public class BoardDaoImpl implements BoardDao {
 		return session.selectList("beforeSuLike");
 	}
 	
+	//추천 누른 경우
 	@Override
 	public int checkSuLike(SuLikeVO slvo) {
 		return (int)session.insert("checkSuLike",slvo);
 	}
 
+	//추천 해제한 경우
 	@Override
 	public int unCheckSuLike(SuLikeVO slvo) {
 		return (int)session.delete("unCheckSuLike",slvo);
 	}
 	
+	//비추천 수 세기
 	@Override
 	public List<SuLikeVO> countSuDislike(SuLikeVO slvo) {
 		return session.selectList("countSuDislike");

@@ -5,7 +5,6 @@
 <%@ page import="java142.todak.board.vo.SuggestionVO"  %>
 <%@ page import="java.util.ArrayList"  %>
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
    <head>
@@ -16,8 +15,8 @@
       <title>댓글</title>
       <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
       <script   type="text/javascript">
-      $(function(){
-         /*기본 덧글 목록 불러오가*/
+		$(document).ready(function(){
+      /*기본 덧글 목록 불러오가*/
          var bs_num = $("#bs_num").val();
          var n_hm_empnum = $("#n_hm_empnum").val();
  
@@ -48,12 +47,10 @@
                         bsr_content:$("#bsr_content").val()
                      
                      }),
-                     
                      error : function(){ //실행 시 오류가 발생하였을 경우
                         alert("시스템 오류 발생, 관리자에게 문의하세요");
                         
                      },
-                     
                      success : function(resultData){
                         if(resultData == "SUCCESS"){
                            alert("댓글 등록이 완료되었습니다");
@@ -187,7 +184,7 @@
          
          //작성일시
          var rownum_span = $("<span>");
-         rownum_span.html("<b>" + rownum + "</b> /  ");
+         rownum_span.html("<b> no." + rownum + "</b> /  ");
          
          //작성일시
          var date_span = $("<span>");
@@ -197,7 +194,7 @@
          var content_p = $("<p>");
          content_p.addClass("con");
          content_p.html(bsr_content);
-        
+                
          //수정하기 버튼
          var up_input = $("<input>");
          up_input.attr({"type" : "button", "value" : "수정하기", "class" : "button", "style" : "float:right;"});
@@ -208,22 +205,21 @@
          del_input.attr({"type" : "button", "value": "삭제하기", "class" : "button", "style" : "float:right;"});
          del_input.addClass("delete_btn");
          
+         //조립하기
          if(hm_empnum == n_hm_empnum){
+        	 //내가 쓴 댓글일 경우
         	 new_li.attr("style", "background-color:Seashell");
-             //조립하기
              writer_p.append(rownum_span).append(date_span).append(up_input).append(del_input)
              new_li.append(writer_p).append(content_p);
              $("#reply_list").append(new_li);
              
-      //       style="background-color:Seashell"
-             
          }else{
+        	 //남이 쓴 댓글
              writer_p.append(rownum_span).append(date_span)
              new_li.append(writer_p).append(content_p);
              $("#reply_list").append(new_li);
          }
       }
-      
       /*input 태그들에 대한 초기화 함수*/
       function dataReset(){
          $("#bsr_content").val("");
@@ -249,7 +245,8 @@
                  	 		<textarea name="bsr_content" id="bsr_content" cols="60" rows="3"></textarea>
                  	 	</td>
                  	 	<td align="center">
-                  			<input type="button" class="button" id="replyInsert" value="저장하기" style="width:70px;height:70px;"/>
+                  			<input type="button" class="button" id="replyInsert" value="저장하기" 
+                  														style="width:70px;height:70px;"/>
                   		</td>
                   	</tr>
             	</table>
@@ -258,10 +255,8 @@
    		      	<div class="reply" align="center">
             		<ul class="reply" id="reply_list"></ul>
          		</div>
-         </div>
-         
+         	</div>
          <br><br>
-         
       </div>
    </body>
 </html>
