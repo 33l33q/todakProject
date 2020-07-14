@@ -171,16 +171,16 @@
                ,BSR_UPDATEDATE	= TO_CHAR(SYSDATE,'YYYYMMDD')      
       WHERE   	BSR_DELETEYN  	= 'Y'
       AND     	BSR_NUM       	= #{bsr_num, jdbcType=VARCHAR} 
-      AND      (HM_EMPNUM = #{hm_empnum, jdbcType=VARCHAR}  or  'H000000000000' =  #{hm_empnum, jdbcType=VARCHAR} )
-   
+      AND      (HM_EMPNUM = #{hm_empnum, jdbcType=VARCHAR} or 
+      			 'H000000000000' =  #{hm_empnum, jdbcType=VARCHAR} )
    </update>
    
    <!-- 건의사항 댓글 삭제하기 -->
    <delete id="deleteSuReply" parameterType="srvo">
-      DELETE    BOARD_SUREPLY
-      WHERE   	BSR_DELETEYN = 'Y'
-      AND      	BSR_NUM      = #{bsr_num, jdbcType=VARCHAR} 
-      AND      	(HM_EMPNUM   = #{hm_empnum, jdbcType=VARCHAR}  or  'H000000000000' =  #{hm_empnum, jdbcType=VARCHAR} )
+      DELETE  FROM BOARD_SUREPLY
+      WHERE   BSR_NUM      = #{bsr_num, jdbcType=VARCHAR} 
+      AND     (HM_EMPNUM   = #{hm_empnum, jdbcType=VARCHAR}  or  
+				'H000000000000' =  #{hm_empnum, jdbcType=VARCHAR} )
    </delete>
    
    

@@ -52,580 +52,8 @@ public class BoardController {
 
    @Autowired
    private BoardService boardService;
-
-
-   //추천수세기
-   @RequestMapping(value="/countSuLike", method = RequestMethod.POST,
-		   								produces = "application/json")
-   @ResponseBody
-   public ResponseEntity<String> countSuLike(@RequestBody SuLikeVO slvo){
-      logger.info("(log)BoardController.countSuLike 진입"); 
-      
-      ResponseEntity<String> entity = null;
-      String result = null;
-      String bs_num = slvo.getBs_num();
-      logger.info("글번호 bs_num >>> " + bs_num);
-      
-      try{
-         List<SuLikeVO> countSuLike = boardService.countSuLike(slvo);
-         result = countSuLike.get(0).getBsl_likeYN();
-         
-         entity = new ResponseEntity<String>(result, HttpStatus.OK);
-         
-      }catch(Exception e){
-         e.printStackTrace();
-         entity = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-      }
-      logger.info("(log)BoardController.countSuLike 종료"); 
-      
-      return entity;
-   }//end of selectSuReply
    
-     //추천기능 구현
-     @ResponseBody
-     @RequestMapping(value="/checkLike", method = RequestMethod.POST, produces = "application/json")
-      public ResponseEntity<String> checkLike(@RequestBody SuLikeVO slvo){
-         logger.info("(log)BoardController.checkLike 진입"); 
-
-         List<SuLikeVO> list = boardService.chaebunSuLike();
-         
-         if(list.size() == 1){
-            String bsl_num = ChaebunUtils.cNum(list.get(0).getBsl_num(), SUREPLY_GUBUN);//공통클래스로 채번생성
-            slvo.setBsl_num(bsl_num);
-         }
-         
-         String bs_num = slvo.getBs_num(); //채번을 통해 primary값인 추천 번호 생성
-         
-         logger.info("추천 >>> " + slvo.getBsl_num());
-         logger.info("글번호 bs_num >>> " + bs_num);
-         
-         ResponseEntity<String> entity = null;
-        
-         int result = 0;
-         
-         try{
-               result = boardService.checkSuLike(slvo);
-               if(result == 1){
-                   entity = new ResponseEntity<String>("1", HttpStatus.OK);
-               }else{
-                  boardService.unCheckSuLike(slvo);
-                  entity = new ResponseEntity<String>("0", HttpStatus.OK);
-               }
-            
-         }catch(Exception e){
-            e.printStackTrace();
-            entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-         }
-         logger.info("(log)BoardController.checkLike 종룐"); 
-         return entity;
-      }
-
-      //비추수세기
-      @RequestMapping(value="/countSuDislike", method = RequestMethod.POST, produces = "application/json")
-      @ResponseBody
-   public ResponseEntity<String> countSuDislike(@RequestBody SuLikeVO slvo){
-      logger.info("(log)BoardController.countSuDislike 진입"); 
-      
-      ResponseEntity<String> entity = null;
-      String result = null;
-      String bs_num = slvo.getBs_num();
-      logger.info("글번호 bs_num >>> " + bs_num);
-      
-      try{
-         List<SuLikeVO> countSuDislike = boardService.countSuDislike(slvo);
-         result = countSuDislike.get(0).getBsl_dislikeYN();
-         
-         entity = new ResponseEntity<String>(result, HttpStatus.OK);
-         
-      }catch(Exception e){
-         e.printStackTrace();
-         entity = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-      }
-      logger.info("(log)BoardController.countSuDislike 종료"); 
-      
-      return entity;
-   }//end of selectSuReply
-
-   //비추 기능 구현
-     @ResponseBody
-     @RequestMapping(value="/checkSuDislike", method = RequestMethod.POST, produces = "application/json")
-      public ResponseEntity<String> checkSuDislike(@RequestBody SuLikeVO slvo){
-         logger.info("(log)BoardController.checkSuDislike 진입"); 
-
-         List<SuLikeVO> list = boardService.chaebunSuLike();
-         
-         if(list.size() == 1){
-            String bsl_num = ChaebunUtils.cNum(list.get(0).getBsl_num(), SUREPLY_GUBUN);
-            slvo.setBsl_num(bsl_num);
-         }
-         
-         String bs_num = slvo.getBs_num();
-         
-         logger.info("추천 >>> " + slvo.getBsl_num());
-         logger.info("글번호 bs_num >>> " + bs_num);
-         
-         ResponseEntity<String> entity = null;
-        
-         int result = 0;
-         
-         try{
-               result = boardService.checkSuDislike(slvo);
-               if(result == 1){
-                   entity = new ResponseEntity<String>("1", HttpStatus.OK);
-               }else{
-                  boardService.unCheckSuDislike(slvo);
-                  entity = new ResponseEntity<String>("0", HttpStatus.OK);
-               }
-            
-         }catch(Exception e){
-            e.printStackTrace();
-            entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-         }
-         logger.info("(log)BoardController.checkSuDislike 종룐"); 
-         return entity;
-      }
-
-     
-        
-   //댓글 목록
-   @RequestMapping(value="/all/{bs_num}.td")
-   @ResponseBody
-   public ResponseEntity<List<SuReplyVO>> selectSuReply(@PathVariable("bs_num") String  bs_num, SuReplyVO srvo){
-      logger.info("(log)ReplyController.selectSuReply 진입"); 
-      
-      ResponseEntity<List<SuReplyVO>> entity = null;
-      
-      srvo.setBs_num(bs_num);
-      
-      logger.info("bs_num >>> " + srvo.getBs_num());
-      try{
-         
-         entity = new ResponseEntity<>(boardService.selectSuReply(srvo), HttpStatus.OK);
-         
-      }catch(Exception e){
-         e.printStackTrace();
-         entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-      }
-      logger.info("(log)ReplyController.selectSuReply 종료"); 
-      
-      return entity;
-   }//end of selectSuReply 
-   
-   
-   //댓글작성하기
-     @RequestMapping(value="/replyInsert")
-      public ResponseEntity<String> insertSuReply(@RequestBody SuReplyVO srvo){
-         logger.info("(log)ReplyController.insertSuReply 진입"); 
-
-         List<SuReplyVO> list = boardService.chaebunSuReply();
-         if(list.size() == 1){
-            String bsr_num = ChaebunUtils.cNum(list.get(0).getBsr_num(), SUREPLY_GUBUN);
-            srvo.setBsr_num(bsr_num);
-         }
-         
-         String bs_num = srvo.getBs_num();
-         
-         logger.info("댓글번호 >>> " + srvo.getBsr_num());
-         logger.info("글번호 bs_num >>> " + bs_num);
-         
-         ResponseEntity<String> entity = null;
-         int result;
-         
-         try{
-               result = boardService.insertSuReply(srvo);
-               if(result == 1){
-                  entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
-               }
-            
-            
-         }catch(Exception e){
-            e.printStackTrace();
-            entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-         }
-         logger.info("(log)ReplyController.insertSuReply 종룐"); 
-         return entity;
-      }
-
-     //댓글 수정
-      @RequestMapping(value="/update/{bsr_num}.td", method = {RequestMethod.PUT, RequestMethod.PATCH})
-      @ResponseBody
-      public ResponseEntity<String> updateSuReply(@PathVariable("bsr_num") String bsr_num, @RequestBody SuReplyVO srvo){
-         logger.info("(log)ReplyController.replyUpdate 진입"); 
-         ResponseEntity<String> entity = null;
-         
-         try{
-            srvo.setBsr_num(bsr_num);
-            int result = boardService.updateSuReply(srvo);
-            if(result == 1){
-               entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
-            }else{
-               entity = new ResponseEntity<String>("FAIL", HttpStatus.OK);
-            }
-            
-         }catch(Exception e){
-            e.printStackTrace();
-            entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-      
-         }
-         logger.info("(log)ReplyController.replyUpdate 종료"); 
-         return entity;
-      }
-      
-      //건의사항 댓글 삭제하기
-      @RequestMapping(value="/delete/{bsr_num}.td", method = {RequestMethod.PUT, RequestMethod.PATCH})
-      @ResponseBody
-      public ResponseEntity<String> deleteSuReply(@PathVariable("bsr_num") String bsr_num, @RequestBody SuReplyVO srvo){
-         logger.info("(log)ReplyController.replyDelete 진입"); 
-         ResponseEntity<String> entity = null;
-         
-         try{
-            srvo.setBsr_num(bsr_num);
-            int result = boardService.deleteSuReply(srvo);
-            if(result == 1){
-               entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
-            }else{
-               entity = new ResponseEntity<String>("FAIL", HttpStatus.OK);
-            }         
-            
-         }catch(Exception e){
-            e.printStackTrace();
-            entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-      
-         }
-         logger.info("(log)ReplyController.replyDelete 종료"); 
-         return entity;
-      }
-    /*--------------------------------------------*/
-   
-   //인덱스에서 공지사항으로 이동하기
-   @RequestMapping("/moveSelectNotice")
-   public String moveSelectNotice(@RequestParam("hm_empnum") String hm_empnum, Model model){
-      
-      model.addAttribute("hm_empnum",hm_empnum);
-      return "redirect:/board/selectNotice.td";
-   }
-   
-   
-   
-   //건의사항 전체 출력하기
-   @RequestMapping("/selectSuggestion")
-   public String selectSuggestion(@ModelAttribute SuggestionVO svo, MemberVO mvo, Model model,HttpServletRequest request){
-      
-      logger.info("(log)BoardController.selectSuggestion 시작 >>> ");
-      
-      LoginSession sManager = LoginSession.getInstance();
-      String sessionId = request.getSession().getId();
-      String hm_empnum = sManager.getUserID(sessionId);
-      logger.info("hm_empnum >>>> : " + hm_empnum); 
-      
-      
-      int totalCnt = 0;
-      String cPage = request.getParameter("curPage");
-      String pageCtrl=request.getParameter("pageCtrl");
-      
-      logger.info("cPage >>>> " + cPage);
-      
-      if(svo.getFindIndex() == null){
-         String key = request.getParameter("key");//검색에 관련된 내용을 쿼리스트링으로 받는 내용입니다.
-         svo.setKeyword(key);
-         String index = request.getParameter("index");//검색에 관련된 내용을 쿼리스트링으로 받는 내용입니다.
-         svo.setFindIndex(index);
-      }
-      
-      
-      String findIndex = svo.getFindIndex();
-      logger.info("FindIndex == " + findIndex);
-      if(findIndex != null && findIndex.equals("hm_empnum")) {
-         svo.setKeyword(hm_empnum);
-         String e = "hm_empnum";
-         model.addAttribute("findIndex",e);
-      }
-
-      logger.info("FindIndex == " + svo.getFindIndex());
-      logger.info("keyword == " + svo.getKeyword());
-      
-      Paging.setPage(svo,cPage,pageCtrl);//페이징할 정보를 Paging클래스에 보내줍니다
-      
-      
-      mvo.setHm_empnum(hm_empnum);
-   
-      List<SuggestionVO> suggestionList = null;
-      suggestionList = boardService.selectSuggestion(svo);
-      if(suggestionList.size() != 0){
-         totalCnt=suggestionList.get(0).getTotalCount();//쿼리 조회한 리스트의 0번 인덱스에 담긴 totalCount값을 받아서 
-         svo.setTotalCount(totalCnt);//vo에 담아줍니다.
-      }
-      svo.setN_hm_empnum(hm_empnum);
-      
-      model.addAttribute("suggestionList",suggestionList);
-      model.addAttribute("i_svo",svo);
-      
-      String url = "board/selectSuggestion";
-      
-      logger.info("(log)BoardController.selectSuggestion 종료>>> ");
-      
-      return url;
-      
-   }
-   
-   //건의사항 상세 출력하기
-   @RequestMapping("/searchSuggestion")
-   public String searchSuggestion(@ModelAttribute SuggestionVO svo, Model model, 
-		   				SuLikeVO slvo, @RequestParam("hm_empnum") String hm_empnum){
-      logger.info("(log)BoardController.searchSuggestion 시작 >>> ");
-
-      svo.setN_hm_empnum(hm_empnum);
-
-      int iFlag = 0;
-      iFlag = boardService.updateSuggestionHit(svo);
-
-      logger.info("(log)BoardController.searchSuggestion 조회수 증가 >>> " + iFlag);
-      
-      List<SuggestionVO> suggestionDetail = null;
-      suggestionDetail = boardService.searchSuggestion(svo);
-
-      model.addAttribute("suggestionDetail",suggestionDetail);
-      
-      //추천유무 확인해서 출력하기
-      String bs_num = svo.getBs_num();
-      
-      logger.info("hm_empnum >>>> : " + hm_empnum );
-      
-      slvo.setBs_num(bs_num);
-      slvo.setHm_empnum(hm_empnum);
-      
-      List<SuLikeVO> beforeLike = null;
-      beforeLike = boardService.beforeSuLike(slvo);
-      String bsl_likeYN = "";
-      bsl_likeYN = beforeLike.get(0).getBsl_likeYN();
-      
-      model.addAttribute("bsl_likeYN",bsl_likeYN);
-      
-      //비추 유무 확인해서 출력하기
-      List<SuLikeVO> beforeSuDislike = null;
-      beforeSuDislike = boardService.beforeSuDislike(slvo);
-      String bsl_dislikeYN = "";
-      bsl_dislikeYN = beforeSuDislike.get(0).getBsl_dislikeYN();
-      
-      model.addAttribute("bsl_dislikeYN",bsl_dislikeYN);
-      
-      String url = "board/searchSuggestion";
-      
-      logger.info("(log)BoardController.searchSuggestion 종료 >>> ");
-     
-      return url;
-   }
-   
-   //건의사항 게시글 삭제하기
-   @RequestMapping(value="/deleteSuggestion")
-   public String deleteSuggestion(@ModelAttribute SuggestionVO svo, Model model){
-      
-      int result = 0;
-      String hm_empnum = svo.getHm_empnum();
-      result = boardService.deleteSuggestion(svo);
-      
-      if(result == 1){
-         logger.info("삭제성공");
-      }else{
-         logger.info("삭제실패");
-      }
-      
-      model.addAttribute("hm_empnum",hm_empnum);
-      
-      return "redirect:/board/selectSuggestion.td";
-   }
-   
-   //건의사항 게시글 수정페이지로 이동
-   @RequestMapping(value="/moveUpdateSuggestion")
-   public String moveUpdateSuggestion(@ModelAttribute SuggestionVO svo, Model model){
-      logger.info("(log)BoardController.moveUpdateSuggestion 시작 >>> ");
-      
-      List<SuggestionVO> updateList = null;
-      String url = null;
-      String bs_num = svo.getBs_num();
-      logger.info("bs_num >>> : " + bs_num);
-      updateList = boardService.searchSuggestion(svo);
-      
-      model.addAttribute("updateList",updateList);
-      
-      
-      if(updateList.size() == 1){
-         url = "board/updateSuggestion";
-      }else{
-         model.addAttribute("hm_empnum",svo.getHm_empnum());
-         url = "redirect:/board/selectSuggestion.td";
-      }
-      
-      logger.info("(log)BoardController.updateSearchSuggestion 종료 >>> ");
-      return  url;
-   }
-   
-   
-   //건의사항 게시글 수정하기
-   @RequestMapping(value="/updateSuggestion", method=RequestMethod.POST)
-   public String updateSuggestion(@ModelAttribute SuggestionVO svo, Model model, HttpServletRequest request){
-      logger.info("(log)BoardController.updateSuggestion 시작 >>> ");
-      int result = 0;
-      String hm_empnum = null;
-      
-      FileUploadUtil fuu = new FileUploadUtil();
-      boolean bFlag = false;
-      bFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + S_PATH);
-      
-      
-      logger.info("bFlag >>> : " + bFlag );
-         
-      if(bFlag){
-         
-         Enumeration<String> en = fuu.getFileNames();
-         
-         String fileName = en.nextElement();
-         
-         if(fileName != null){
-            fileName = fileName.replaceAll( FilePath.RELATIVE_PATH + S_PATH, "");
-         }
-
-         
-         if(fileName != null){
-            String bs_image = FilePath.RELATIVE_PATH + S_PATH + fileName;
-            svo.setBs_image(bs_image);
-         }else{
-            svo.setBs_image("");
-         }
-         
-         String bs_image = svo.getBs_image();
-   
-         logger.info("이미지이름 >>>> " + bs_image);
-         
-         String bs_title = fuu.getParameter("bs_title");
-         String bs_content = fuu.getParameter("bs_content");
-         String bs_num = fuu.getParameter("bs_num");
-         hm_empnum = fuu.getParameter("hm_empnum");
-         
-         
-         
-         logger.info(bs_num + "" + bs_title + "" +bs_content + "" + hm_empnum);
-         
-         svo.setBs_num(bs_num);
-         svo.setBs_title(bs_title);
-         svo.setBs_content(bs_content);
-         svo.setBs_image(bs_image);
-         svo.setHm_empnum(hm_empnum);
-      
-
-         VOPrintUtil.suggestionVOPrint(svo);
-      
-      }else{
-         logger.info("multipart 수정 실패");
-      }
-   
-      result = boardService.updateSuggestion(svo);
-      
-      if(result == 1){
-         logger.info("수정성공");
-      }else{
-         logger.info("수정실패");
-      }
-      
-      String bs_num = svo.getBs_num();
-      model.addAttribute("hm_empnum",hm_empnum);
-      
-      
-      return "redirect:/board/searchSuggestion.td?bs_num=" + bs_num;
-   }
-   
-   //건의사항 파일다운로드 함수
-   @RequestMapping(value="/downloadSuggestion")
-   public String downloadSuggestion(@ModelAttribute SuggestionVO svo, Model model){
-      logger.info("(log)BoardController.downloadSuggestion 시작 >>> ");
-
-      String bs_image = svo.getBs_image();
-      
-      bs_image = bs_image.replace(FilePath.RELATIVE_PATH + S_PATH , "");
-      
-      logger.info("bs_image >>> " + bs_image);
-      
-      model.addAttribute("fileName" ,bs_image);
-      model.addAttribute("FilePath", FilePath.ABSTRACT_PATH + S_PATH );
-      
-      logger.info("(log)BoardController.downloadSuggestion 종료 >>> ");
-      return "board/fileDownload";
-   }
-
-   //건의사항 작성으로 이동하기
-   @RequestMapping("/moveWriteSuggestion")
-   public String moveWriteSuggestion(){
-      logger.info("(log)BoardController.moveWriteSuggestion 진입 >>> ");
-
-      return "board/insertSuggestion";
-   }
-   
-   //건의사항 작성
-   @RequestMapping("/insertSuggestion")
-   public String insertSuggestion(@ModelAttribute SuggestionVO svo, Model model,HttpServletRequest request){
-      logger.info("(log)BoardController.insetSuggestion 시작 >>> ");
-      logger.info("(log)BoardController.cheabunSuggestion 시작 >>> ");
-      
-      String bs_num = "";
-      List<SuggestionVO> list = null;
-      list = boardService.cheabunSuggestion();
-      bs_num = list.get(0).getBs_num();
-      
-      svo.setBs_num(ChaebunUtils.cNum2(bs_num, SUGGESTION_GUBUN));
-      logger.info("(log)BoardController.cheabunSuggestion 종료  : bs_num >>> " + ChaebunUtils.cNum2(bs_num, SUGGESTION_GUBUN));
-
-      String url =  null;
-      
-      FileUploadUtil fuu = new FileUploadUtil();
-      boolean bFlag = false;
-      bFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + S_PATH);
-      logger.info("bFlag >>> : " + bFlag );
-      
-      if(bFlag){
-         
-         Enumeration<String> en = fuu.getFileNames();
-         
-         String fileName = en.nextElement();
-         
-         if(fileName != null){
-            String bs_image = FilePath.RELATIVE_PATH + S_PATH + fileName;
-            svo.setBs_image(bs_image);
-         }else{
-            svo.setBs_image("");
-         }
-         
-         String    hm_empnum = fuu.getParameter("hm_empnum");
-         String    bs_title   =  fuu.getParameter("bs_title");
-         String    bs_content = fuu.getParameter("bs_content");
-         
-         svo.setHm_empnum(hm_empnum);
-         svo.setBs_title(bs_title);
-         svo.setBs_content(bs_content);
-         
-         int result = 0;
-         result = boardService.insertSuggestion(svo);
-         
-         if(result == 1){
-            
-            logger.info("작성 성공!");
-            url = "redirect:/board/selectSuggestion.td";
-            model.addAttribute("hm_empnum",hm_empnum);
-         }else{
-            logger.info("작성 실패!");
-            url = "redirect:/board/writeSuggestion.td";
-         }
-
-      }else{
-         logger.info("파일업로드실패");
-         url = "redirect:/board/writeSuggestion.td";
-      }
-      
-      
-      logger.info("(log)BoardController.insetSuggestion 종료 >>> ");
-      return url;
-   }
-   
-   //공지사항 게시글 목록  및 검색
+  //공지사항 게시글 목록  및 검색
    @RequestMapping("/selectNotice") 
    public String selectBoardNotice(@ModelAttribute NoticeVO nvo, MemberVO mvo, Model model, 
                                                    HttpServletRequest request ) {
@@ -910,8 +338,6 @@ public class BoardController {
       return "board/fileDownload";
    }
 
-
-   
    //공지사항 게시글 수정페이지로 이동
    @RequestMapping(value="/moveUpdateNotice")
    public String moveUpdateNotice(@ModelAttribute NoticeVO nvo, Model model){
@@ -937,103 +363,103 @@ public class BoardController {
    }
    
    //공지사항 게시글 수정하기
-      @RequestMapping(value="/updateNotice", method=RequestMethod.POST)
-      public String updateNotice(@ModelAttribute NoticeVO nvo, Model model, HttpServletRequest request){
-         logger.info("(log)BoardController.updateNotice 시작 >>> ");
-         int result = 0;
-         
-         FileUploadUtil fuu = new FileUploadUtil();
-         boolean bFlag = false;
-         bFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + N_PATH);
-         
-         logger.info("bFlag >>> : " + bFlag );
-         
-         if(bFlag){
-            Enumeration<String> en = fuu.getFileNames();
-            
-            String firstFile =  en.nextElement();
-            String secondFile =  en.nextElement();
-            
-            logger.info("firstFile >>> : " + firstFile);
-            logger.info("secondFile >>> : " + secondFile);
-            
-            if(firstFile != null){
-               firstFile = firstFile.replaceAll(FilePath.RELATIVE_PATH + N_PATH, "");
-            }
-            
-            if(secondFile == null && firstFile != null){
-               
-               nvo.setBn_image(FilePath.RELATIVE_PATH + N_PATH + firstFile);
-               nvo.setBn_file("");
-               logger.info("1.파일명 >>> : " +  nvo.getBn_file());
-               logger.info("1.이미지명 >>> : " +  nvo.getBn_image());
-         
-            }else if(firstFile == null && secondFile != null){
-               nvo.setBn_file(secondFile);
-               nvo.setBn_image("");
-               logger.info("2.파일명 >>> : " +  nvo.getBn_file());
-               logger.info("2.이미지명 >>> : " +  nvo.getBn_image());
-         
-            }else if(firstFile == null && secondFile == null){
-               nvo.setBn_file("");
-               nvo.setBn_image("");
-               logger.info("3.파일명 >>> : " +  nvo.getBn_file());
-               logger.info("3.이미지명 >>> : " +  nvo.getBn_image());
-            
-            }else{
-               nvo.setBn_file(secondFile);
-               nvo.setBn_image(FilePath.RELATIVE_PATH + N_PATH + firstFile);
-               logger.info("4.파일명 >>> : " +  nvo.getBn_file());
-               logger.info("4.이미지명 >>> : " +  nvo.getBn_image());
-            }
+   @RequestMapping(value="/updateNotice", method=RequestMethod.POST)
+   public String updateNotice(@ModelAttribute NoticeVO nvo, Model model, HttpServletRequest request){
+     logger.info("(log)BoardController.updateNotice 시작 >>> ");
+     int result = 0;
+     
+     FileUploadUtil fuu = new FileUploadUtil();
+     boolean bFlag = false;
+     bFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + N_PATH);
+     
+     logger.info("bFlag >>> : " + bFlag );
+     
+     if(bFlag){
+        Enumeration<String> en = fuu.getFileNames();
+        
+        String firstFile =  en.nextElement();
+        String secondFile =  en.nextElement();
+        
+        logger.info("firstFile >>> : " + firstFile);
+        logger.info("secondFile >>> : " + secondFile);
+        
+        if(firstFile != null){
+           firstFile = firstFile.replaceAll(FilePath.RELATIVE_PATH + N_PATH, "");
+        }
+        
+        if(secondFile == null && firstFile != null){
+           
+           nvo.setBn_image(FilePath.RELATIVE_PATH + N_PATH + firstFile);
+           nvo.setBn_file("");
+           logger.info("1.파일명 >>> : " +  nvo.getBn_file());
+           logger.info("1.이미지명 >>> : " +  nvo.getBn_image());
+     
+        }else if(firstFile == null && secondFile != null){
+           nvo.setBn_file(secondFile);
+           nvo.setBn_image("");
+           logger.info("2.파일명 >>> : " +  nvo.getBn_file());
+           logger.info("2.이미지명 >>> : " +  nvo.getBn_image());
+     
+        }else if(firstFile == null && secondFile == null){
+           nvo.setBn_file("");
+           nvo.setBn_image("");
+           logger.info("3.파일명 >>> : " +  nvo.getBn_file());
+           logger.info("3.이미지명 >>> : " +  nvo.getBn_image());
+        
+        }else{
+           nvo.setBn_file(secondFile);
+           nvo.setBn_image(FilePath.RELATIVE_PATH + N_PATH + firstFile);
+           logger.info("4.파일명 >>> : " +  nvo.getBn_file());
+           logger.info("4.이미지명 >>> : " +  nvo.getBn_image());
+        }
 
-            String bn_file = nvo.getBn_file();
-            String bn_image = nvo.getBn_image();
-      
-            logger.info("파일이름 >>>> " + bn_file);
-            logger.info("이미지이름 >>>> " + bn_image);
-            
-            String bn_title = fuu.getParameter("bn_title");
-            String bn_content = fuu.getParameter("bn_content");
-            String bn_num = fuu.getParameter("bn_num");
-            String bn_divnum   = fuu.getParameter("bn_divnum");
-            String bn_deptnum = fuu.getParameter("bn_deptnum");
-            
-            logger.info(bn_num + "" + bn_title + "" +bn_content + "");
-            
-            System.out.println("bn_deptnum >>> " + bn_deptnum + " ,bn_divnum >>>" + bn_divnum );
-            
-            nvo.setBn_num(bn_num);
-            nvo.setBn_title(bn_title);
-            nvo.setBn_content(bn_content);
-            nvo.setBn_image(bn_image);
-            nvo.setBn_file(bn_file);
-            nvo.setBn_deptnum(bn_deptnum);
-            
-            if(bn_deptnum == null) nvo.setBn_divnum(""); //부서만 선택하고 팀은 선택하지 않는 경우
-            else nvo.setBn_divnum(bn_divnum);
-         
+        String bn_file = nvo.getBn_file();
+        String bn_image = nvo.getBn_image();
+  
+        logger.info("파일이름 >>>> " + bn_file);
+        logger.info("이미지이름 >>>> " + bn_image);
+        
+        String bn_title = fuu.getParameter("bn_title");
+        String bn_content = fuu.getParameter("bn_content");
+        String bn_num = fuu.getParameter("bn_num");
+        String bn_divnum   = fuu.getParameter("bn_divnum");
+        String bn_deptnum = fuu.getParameter("bn_deptnum");
+        
+        logger.info(bn_num + "" + bn_title + "" +bn_content + "");
+        
+        System.out.println("bn_deptnum >>> " + bn_deptnum + " ,bn_divnum >>>" + bn_divnum );
+        
+        nvo.setBn_num(bn_num);
+        nvo.setBn_title(bn_title);
+        nvo.setBn_content(bn_content);
+        nvo.setBn_image(bn_image);
+        nvo.setBn_file(bn_file);
+        nvo.setBn_deptnum(bn_deptnum);
+        
+        if(bn_deptnum == null) nvo.setBn_divnum(""); //부서만 선택하고 팀은 선택하지 않는 경우
+        else nvo.setBn_divnum(bn_divnum);
+     
 
-            VOPrintUtil.noticeVOPrint(nvo);
-         
-         }else{
-            logger.info("multipart 수정 실패");
-         }
-      
-         result = boardService.updateNotice(nvo);
-         
-         if(result == 1){
-            logger.info("수정성공");
-         }else{
-            logger.info("수정실패");
-         }
-         
-         String bn_num = nvo.getBn_num();
-         
-         return "redirect:/board/searchNotice.td?bn_num=" + bn_num;
-      }
+        VOPrintUtil.noticeVOPrint(nvo);
+     
+     }else{
+        logger.info("multipart 수정 실패");
+     }
+  
+     result = boardService.updateNotice(nvo);
+     
+     if(result == 1){
+        logger.info("수정성공");
+     }else{
+        logger.info("수정실패");
+     }
+     
+     String bn_num = nvo.getBn_num();
+     
+     return "redirect:/board/searchNotice.td?bn_num=" + bn_num;
+     
+   }
 
-      
    //공지사항 게시글 삭제하기
    @RequestMapping(value="/deleteNotice")
    public String deleteNotice(@ModelAttribute NoticeVO nvo, Model model){
@@ -1055,7 +481,6 @@ public class BoardController {
       return "redirect:/board/selectNotice.td";
    }
 
-   
    //공지사항 확인 폼으로 이동하기
    @RequestMapping(value="/moveCheckNotice")
    public String moveCheckNotice(@ModelAttribute MemberVO mvo, NoticeVO nvo, Model model){
@@ -1072,7 +497,6 @@ public class BoardController {
 
       return "board/checkNotice";
    }
-   
    
    //공지사항 게시글 확인
    @RequestMapping("/checkNotice")
@@ -1136,4 +560,569 @@ public class BoardController {
       return "board/checkListNotice";
    }
    
+   //////////////////////////////공지사항 기능 종료//////////////////////////////
+   
+   //인덱스에서 공지사항으로 이동하기
+   @RequestMapping("/moveSelectNotice")
+   public String moveSelectNotice(@RequestParam("hm_empnum") String hm_empnum, Model model){
+      
+      model.addAttribute("hm_empnum",hm_empnum);
+      return "redirect:/board/selectNotice.td";
+   }
+   
+   //건의사항 작성으로 이동하기
+   @RequestMapping("/moveWriteSuggestion")
+   public String moveWriteSuggestion(){
+      logger.info("(log)BoardController.moveWriteSuggestion 진입 >>> ");
+
+      return "board/insertSuggestion";
+   }
+   
+   //건의사항 작성
+   @RequestMapping("/insertSuggestion")
+   public String insertSuggestion(@ModelAttribute SuggestionVO svo, Model model,HttpServletRequest request){
+      logger.info("(log)BoardController.insetSuggestion 시작 >>> ");
+      logger.info("(log)BoardController.cheabunSuggestion 시작 >>> ");
+      
+      String bs_num = "";
+      List<SuggestionVO> list = null;
+      list = boardService.cheabunSuggestion();
+      bs_num = list.get(0).getBs_num();
+      
+      svo.setBs_num(ChaebunUtils.cNum2(bs_num, SUGGESTION_GUBUN));
+      logger.info("(log)BoardController.cheabunSuggestion 종료  : bs_num >>> " + ChaebunUtils.cNum2(bs_num, SUGGESTION_GUBUN));
+
+      String url =  null;
+      
+      FileUploadUtil fuu = new FileUploadUtil();
+      boolean bFlag = false;
+      bFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + S_PATH);
+      logger.info("bFlag >>> : " + bFlag );
+      
+      if(bFlag){
+         
+         Enumeration<String> en = fuu.getFileNames();
+         
+         String fileName = en.nextElement();
+         
+         if(fileName != null){
+            String bs_image = FilePath.RELATIVE_PATH + S_PATH + fileName;
+            svo.setBs_image(bs_image);
+         }else{
+            svo.setBs_image("");
+         }
+         
+         String    hm_empnum = fuu.getParameter("hm_empnum");
+         String    bs_title   =  fuu.getParameter("bs_title");
+         String    bs_content = fuu.getParameter("bs_content");
+         
+         svo.setHm_empnum(hm_empnum);
+         svo.setBs_title(bs_title);
+         svo.setBs_content(bs_content);
+         
+         int result = 0;
+         result = boardService.insertSuggestion(svo);
+         
+         if(result == 1){
+            
+            logger.info("작성 성공!");
+            url = "redirect:/board/selectSuggestion.td";
+            model.addAttribute("hm_empnum",hm_empnum);
+         }else{
+            logger.info("작성 실패!");
+            url = "redirect:/board/writeSuggestion.td";
+         }
+
+      }else{
+         logger.info("파일업로드실패");
+         url = "redirect:/board/writeSuggestion.td";
+      }
+      
+      
+      logger.info("(log)BoardController.insetSuggestion 종료 >>> ");
+      return url;
+   }
+   
+   //건의사항 전체 출력하기
+   @RequestMapping("/selectSuggestion")
+   public String selectSuggestion(@ModelAttribute SuggestionVO svo, MemberVO mvo, Model model,HttpServletRequest request){
+      
+      logger.info("(log)BoardController.selectSuggestion 시작 >>> ");
+      
+      LoginSession sManager = LoginSession.getInstance();
+      String sessionId = request.getSession().getId();
+      String hm_empnum = sManager.getUserID(sessionId);
+      logger.info("hm_empnum >>>> : " + hm_empnum); 
+      
+      
+      int totalCnt = 0;
+      String cPage = request.getParameter("curPage");
+      String pageCtrl=request.getParameter("pageCtrl");
+      
+      logger.info("cPage >>>> " + cPage);
+      
+      if(svo.getFindIndex() == null){
+         String key = request.getParameter("key");//검색에 관련된 내용을 쿼리스트링으로 받는 내용입니다.
+         svo.setKeyword(key);
+         String index = request.getParameter("index");//검색에 관련된 내용을 쿼리스트링으로 받는 내용입니다.
+         svo.setFindIndex(index);
+      }
+      
+      
+      String findIndex = svo.getFindIndex();
+      logger.info("FindIndex == " + findIndex);
+      if(findIndex != null && findIndex.equals("hm_empnum")) {
+         svo.setKeyword(hm_empnum);
+         String e = "hm_empnum";
+         model.addAttribute("findIndex",e);
+      }
+
+      logger.info("FindIndex == " + svo.getFindIndex());
+      logger.info("keyword == " + svo.getKeyword());
+      
+      Paging.setPage(svo,cPage,pageCtrl);//페이징할 정보를 Paging클래스에 보내줍니다
+      
+      
+      mvo.setHm_empnum(hm_empnum);
+   
+      List<SuggestionVO> suggestionList = null;
+      suggestionList = boardService.selectSuggestion(svo);
+      if(suggestionList.size() != 0){
+         totalCnt=suggestionList.get(0).getTotalCount();//쿼리 조회한 리스트의 0번 인덱스에 담긴 totalCount값을 받아서 
+         svo.setTotalCount(totalCnt);//vo에 담아줍니다.
+      }
+      svo.setN_hm_empnum(hm_empnum);
+      
+      model.addAttribute("suggestionList",suggestionList);
+      model.addAttribute("i_svo",svo);
+      
+      String url = "board/selectSuggestion";
+      
+      logger.info("(log)BoardController.selectSuggestion 종료>>> ");
+      
+      return url;
+      
+   }
+   
+   //건의사항 상세 출력하기
+   @RequestMapping("/searchSuggestion")
+   public String searchSuggestion(@ModelAttribute SuggestionVO svo, Model model, 
+		   				SuLikeVO slvo, @RequestParam("hm_empnum") String hm_empnum){
+      logger.info("(log)BoardController.searchSuggestion 시작 >>> ");
+
+      svo.setN_hm_empnum(hm_empnum);
+
+      int iFlag = 0;
+      iFlag = boardService.updateSuggestionHit(svo);
+
+      logger.info("(log)BoardController.searchSuggestion 조회수 증가 >>> " + iFlag);
+      
+      List<SuggestionVO> suggestionDetail = null;
+      suggestionDetail = boardService.searchSuggestion(svo);
+
+      model.addAttribute("suggestionDetail",suggestionDetail);
+      
+      //추천유무 확인해서 출력하기
+      String bs_num = svo.getBs_num();
+      
+      logger.info("hm_empnum >>>> : " + hm_empnum );
+      
+      slvo.setBs_num(bs_num);
+      slvo.setHm_empnum(hm_empnum);
+      
+      List<SuLikeVO> beforeLike = null;
+      beforeLike = boardService.beforeSuLike(slvo);
+      String bsl_likeYN = "";
+      bsl_likeYN = beforeLike.get(0).getBsl_likeYN();
+      
+      model.addAttribute("bsl_likeYN",bsl_likeYN);
+      
+      //비추 유무 확인해서 출력하기
+      List<SuLikeVO> beforeSuDislike = null;
+      beforeSuDislike = boardService.beforeSuDislike(slvo);
+      String bsl_dislikeYN = "";
+      bsl_dislikeYN = beforeSuDislike.get(0).getBsl_dislikeYN();
+      
+      model.addAttribute("bsl_dislikeYN",bsl_dislikeYN);
+      
+      String url = "board/searchSuggestion";
+      
+      logger.info("(log)BoardController.searchSuggestion 종료 >>> ");
+     
+      return url;
+   }
+   
+   //건의사항 게시글 삭제하기
+   @RequestMapping(value="/deleteSuggestion")
+   public String deleteSuggestion(@ModelAttribute SuggestionVO svo, Model model){
+      
+      int result = 0;
+      String hm_empnum = svo.getHm_empnum();
+      result = boardService.deleteSuggestion(svo);
+      
+      if(result == 1){
+         logger.info("삭제성공");
+      }else{
+         logger.info("삭제실패");
+      }
+      
+      model.addAttribute("hm_empnum",hm_empnum);
+      
+      return "redirect:/board/selectSuggestion.td";
+   }
+   
+   //건의사항 게시글 수정페이지로 이동
+   @RequestMapping(value="/moveUpdateSuggestion")
+   public String moveUpdateSuggestion(@ModelAttribute SuggestionVO svo, Model model){
+      logger.info("(log)BoardController.moveUpdateSuggestion 시작 >>> ");
+      
+      List<SuggestionVO> updateList = null;
+      String url = null;
+      String bs_num = svo.getBs_num();
+      logger.info("bs_num >>> : " + bs_num);
+      updateList = boardService.searchSuggestion(svo);
+      
+      model.addAttribute("updateList",updateList);
+      
+      
+      if(updateList.size() == 1){
+         url = "board/updateSuggestion";
+      }else{
+         model.addAttribute("hm_empnum",svo.getHm_empnum());
+         url = "redirect:/board/selectSuggestion.td";
+      }
+      
+      logger.info("(log)BoardController.updateSearchSuggestion 종료 >>> ");
+      return  url;
+   }
+   
+   //건의사항 게시글 수정하기
+   @RequestMapping(value="/updateSuggestion", method=RequestMethod.POST)
+   public String updateSuggestion(@ModelAttribute SuggestionVO svo, Model model, HttpServletRequest request){
+      logger.info("(log)BoardController.updateSuggestion 시작 >>> ");
+      int result = 0;
+      String hm_empnum = null;
+      
+      FileUploadUtil fuu = new FileUploadUtil();
+      boolean bFlag = false;
+      bFlag = fuu.fileUpload(request, FilePath.ABSTRACT_PATH + S_PATH);
+      
+      
+      logger.info("bFlag >>> : " + bFlag );
+         
+      if(bFlag){
+         
+         Enumeration<String> en = fuu.getFileNames();
+         
+         String fileName = en.nextElement();
+         
+         if(fileName != null){
+            fileName = fileName.replaceAll( FilePath.RELATIVE_PATH + S_PATH, "");
+         }
+
+         
+         if(fileName != null){
+            String bs_image = FilePath.RELATIVE_PATH + S_PATH + fileName;
+            svo.setBs_image(bs_image);
+         }else{
+            svo.setBs_image("");
+         }
+         
+         String bs_image = svo.getBs_image();
+   
+         logger.info("이미지이름 >>>> " + bs_image);
+         
+         String bs_title = fuu.getParameter("bs_title");
+         String bs_content = fuu.getParameter("bs_content");
+         String bs_num = fuu.getParameter("bs_num");
+         hm_empnum = fuu.getParameter("hm_empnum");
+         
+         
+         
+         logger.info(bs_num + "" + bs_title + "" +bs_content + "" + hm_empnum);
+         
+         svo.setBs_num(bs_num);
+         svo.setBs_title(bs_title);
+         svo.setBs_content(bs_content);
+         svo.setBs_image(bs_image);
+         svo.setHm_empnum(hm_empnum);
+      
+
+         VOPrintUtil.suggestionVOPrint(svo);
+      
+      }else{
+         logger.info("multipart 수정 실패");
+      }
+   
+      result = boardService.updateSuggestion(svo);
+      
+      if(result == 1){
+         logger.info("수정성공");
+      }else{
+         logger.info("수정실패");
+      }
+      
+      String bs_num = svo.getBs_num();
+      model.addAttribute("hm_empnum",hm_empnum);
+      
+      
+      return "redirect:/board/searchSuggestion.td?bs_num=" + bs_num;
+   }
+   
+   //건의사항 파일다운로드 함수
+   @RequestMapping(value="/downloadSuggestion")
+   public String downloadSuggestion(@ModelAttribute SuggestionVO svo, Model model){
+      logger.info("(log)BoardController.downloadSuggestion 시작 >>> ");
+
+      String bs_image = svo.getBs_image();
+      
+      bs_image = bs_image.replace(FilePath.RELATIVE_PATH + S_PATH , "");
+      
+      logger.info("bs_image >>> " + bs_image);
+      
+      model.addAttribute("fileName" ,bs_image);
+      model.addAttribute("FilePath", FilePath.ABSTRACT_PATH + S_PATH );
+      
+      logger.info("(log)BoardController.downloadSuggestion 종료 >>> ");
+      return "board/fileDownload";
+   }
+
+   //추천수세기
+   @RequestMapping(value="/countSuLike", method = RequestMethod.POST,
+		   								produces = "application/json")
+   @ResponseBody
+   public ResponseEntity<String> countSuLike(@RequestBody SuLikeVO slvo){
+      logger.info("(log)BoardController.countSuLike 진입"); 
+      
+      ResponseEntity<String> entity = null;
+      String result = null;
+      String bs_num = slvo.getBs_num();
+      logger.info("글번호 bs_num >>> " + bs_num);
+      
+      try{
+         List<SuLikeVO> countSuLike = boardService.countSuLike(slvo);
+         result = countSuLike.get(0).getBsl_likeYN();
+         
+         entity = new ResponseEntity<String>(result, HttpStatus.OK);
+         
+      }catch(Exception e){
+         e.printStackTrace();
+         entity = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+      }
+      logger.info("(log)BoardController.countSuLike 종료"); 
+      
+      return entity;
+   }//end of selectSuReply
+   
+   //추천기능 구현
+   @ResponseBody
+   @RequestMapping(value="/checkLike", method = RequestMethod.POST, produces = "application/json")
+   public ResponseEntity<String> checkLike(@RequestBody SuLikeVO slvo){
+     logger.info("(log)BoardController.checkLike 진입"); 
+
+     List<SuLikeVO> list = boardService.chaebunSuLike();
+     
+     if(list.size() == 1){
+        String bsl_num = ChaebunUtils.cNum(list.get(0).getBsl_num(), SUREPLY_GUBUN);//공통클래스로 채번생성
+        slvo.setBsl_num(bsl_num);
+     }
+     
+     String bs_num = slvo.getBs_num(); //채번을 통해 primary값인 추천 번호 생성
+     
+     logger.info("추천 >>> " + slvo.getBsl_num());
+     logger.info("글번호 bs_num >>> " + bs_num);
+     
+     ResponseEntity<String> entity = null;
+    
+     int result = 0;
+     
+     try{
+           result = boardService.checkSuLike(slvo);
+           if(result == 1){
+               entity = new ResponseEntity<String>("1", HttpStatus.OK);
+           }else{
+              boardService.unCheckSuLike(slvo);
+              entity = new ResponseEntity<String>("0", HttpStatus.OK);
+           }
+        
+     }catch(Exception e){
+        e.printStackTrace();
+        entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+     }
+     logger.info("(log)BoardController.checkLike 종룐"); 
+     return entity;
+  }
+
+   //비추수세기
+      @RequestMapping(value="/countSuDislike", method = RequestMethod.POST, produces = "application/json")
+      @ResponseBody
+   public ResponseEntity<String> countSuDislike(@RequestBody SuLikeVO slvo){
+      logger.info("(log)BoardController.countSuDislike 진입"); 
+      
+      ResponseEntity<String> entity = null;
+      String result = null;
+      String bs_num = slvo.getBs_num();
+      logger.info("글번호 bs_num >>> " + bs_num);
+      
+      try{
+         List<SuLikeVO> countSuDislike = boardService.countSuDislike(slvo);
+         result = countSuDislike.get(0).getBsl_dislikeYN();
+         
+         entity = new ResponseEntity<String>(result, HttpStatus.OK);
+         
+      }catch(Exception e){
+         e.printStackTrace();
+         entity = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+      }
+      logger.info("(log)BoardController.countSuDislike 종료"); 
+      
+      return entity;
+   }//end of selectSuReply
+
+   //비추 기능 구현
+   @ResponseBody
+   @RequestMapping(value="/checkSuDislike", method = RequestMethod.POST, produces = "application/json")
+   public ResponseEntity<String> checkSuDislike(@RequestBody SuLikeVO slvo){
+     logger.info("(log)BoardController.checkSuDislike 진입"); 
+
+     List<SuLikeVO> list = boardService.chaebunSuLike();
+     
+     if(list.size() == 1){
+        String bsl_num = ChaebunUtils.cNum(list.get(0).getBsl_num(), SUREPLY_GUBUN);
+        slvo.setBsl_num(bsl_num);
+     }
+     
+     String bs_num = slvo.getBs_num();
+     
+     logger.info("추천 >>> " + slvo.getBsl_num());
+     logger.info("글번호 bs_num >>> " + bs_num);
+     
+     ResponseEntity<String> entity = null;
+    
+     int result = 0;
+     
+     try{
+           result = boardService.checkSuDislike(slvo);
+           if(result == 1){
+               entity = new ResponseEntity<String>("1", HttpStatus.OK);
+           }else{
+              boardService.unCheckSuDislike(slvo);
+              entity = new ResponseEntity<String>("0", HttpStatus.OK);
+           }
+        
+     }catch(Exception e){
+        e.printStackTrace();
+        entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+     }
+     logger.info("(log)BoardController.checkSuDislike 종룐"); 
+     return entity;
+  }
+
+   //댓글 목록
+   @RequestMapping(value="/all/{bs_num}.td")
+   @ResponseBody
+   public ResponseEntity<List<SuReplyVO>> selectSuReply(@PathVariable("bs_num") String bs_num, 
+		   																	 	SuReplyVO srvo){
+      logger.info("(log)ReplyController.selectSuReply 진입"); 
+      ResponseEntity<List<SuReplyVO>> entity = null;
+      srvo.setBs_num(bs_num);
+      logger.info("bs_num >>> " + srvo.getBs_num());
+      try{
+         entity = new ResponseEntity<>(boardService.selectSuReply(srvo), HttpStatus.OK);
+      }catch(Exception e){
+         e.printStackTrace();
+         entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      }
+      logger.info("(log)ReplyController.selectSuReply 종료"); 
+      
+      return entity;
+   }//end of selectSuReply 
+   
+   //댓글작성하기
+   @RequestMapping(value="/replyInsert")
+   public ResponseEntity<String> insertSuReply(@RequestBody SuReplyVO srvo){
+     logger.info("(log)ReplyController.insertSuReply 진입"); 
+
+     List<SuReplyVO> list = boardService.chaebunSuReply();
+     if(list.size() == 1){
+        String bsr_num = ChaebunUtils.cNum(list.get(0).getBsr_num(), SUREPLY_GUBUN);
+        srvo.setBsr_num(bsr_num);
+     }
+     
+     String bs_num = srvo.getBs_num();
+     
+     logger.info("댓글번호 >>> " + srvo.getBsr_num());
+     logger.info("글번호 bs_num >>> " + bs_num);
+     
+     ResponseEntity<String> entity = null;
+     int result;
+     
+     try{
+           result = boardService.insertSuReply(srvo);
+           if(result == 1){
+              entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+           }
+        
+     }catch(Exception e){
+        e.printStackTrace();
+        entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+     }
+     logger.info("(log)ReplyController.insertSuReply 종룐"); 
+     return entity;
+  }
+
+   //댓글 수정
+   @RequestMapping(value="/update/{bsr_num}.td", method = {RequestMethod.PUT, RequestMethod.PATCH})
+   @ResponseBody
+   public ResponseEntity<String> updateSuReply(@PathVariable("bsr_num") String bsr_num, 
+		   																@RequestBody SuReplyVO srvo){
+	 logger.info("(log)ReplyController.replyUpdate 진입"); 
+	 ResponseEntity<String> entity = null;
+	 
+	 try{
+	    srvo.setBsr_num(bsr_num);
+	    int result = boardService.updateSuReply(srvo);
+	    if(result == 1){
+	       entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+	    }else{
+	       entity = new ResponseEntity<String>("FAIL", HttpStatus.OK);
+	        }
+	        
+	     }catch(Exception e){
+	        e.printStackTrace();
+	        entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	  
+	     }
+	     logger.info("(log)ReplyController.replyUpdate 종료"); 
+	 return entity;
+	 
+    }
+      
+   //건의사항 댓글 삭제하기
+   @RequestMapping(value="/delete/{bsr_num}.td", method = {RequestMethod.PUT, RequestMethod.PATCH})
+   @ResponseBody
+   public ResponseEntity<String> deleteSuReply(@PathVariable("bsr_num") String bsr_num, 
+		   																@RequestBody SuReplyVO srvo){
+     logger.info("(log)ReplyController.replyDelete 진입"); 
+     ResponseEntity<String> entity = null;
+     
+     try{
+        srvo.setBsr_num(bsr_num);
+        int result = boardService.deleteSuReply(srvo);
+        if(result == 1){
+           entity = new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+        }else{
+           entity = new ResponseEntity<String>("FAIL", HttpStatus.OK);
+        }         
+        
+     }catch(Exception e){
+        e.printStackTrace();
+        entity = new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+     }
+     logger.info("(log)ReplyController.replyDelete 종료"); 
+     return entity;
+     
+    }
+
+ 
 }//end of class

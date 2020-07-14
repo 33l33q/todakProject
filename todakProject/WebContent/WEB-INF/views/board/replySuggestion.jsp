@@ -15,8 +15,8 @@
       <title>댓글</title>
       <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
       <script   type="text/javascript">
-		$(document).ready(function(){
-      /*기본 덧글 목록 불러오가*/
+	  $(document).ready(function(){
+        /*기본 덧글 목록 불러오가*/
          var bs_num = $("#bs_num").val();
          var n_hm_empnum = $("#n_hm_empnum").val();
  
@@ -78,10 +78,9 @@
             data+="<input type='button' class='update_btn' value='수정완료' style='float:right;'>";
             data+="<input type='button' class='reset_btn' value='수정취소' style='float:right;'>";
             conArea.html(data);
-            
          });
          
-         /*초기화 버튼*/
+         /*수정취소 버튼*/
          $(document).on("click",".reset_btn",function(){
             var conText = $(this).parents("li").find("textarea").html();
             $(this).parents("li").find("input[type='button']").show();
@@ -99,14 +98,14 @@
                return false;
             }else{
                $.ajax({
-                  url:'/board/update/' +  bsr_num + ".td",
+                  url:'/board/update/' +  bsr_num + '.td',
                   type:'put',
                   headers:{
                         "Content-Type" : "application/json",
                         "X-HTTP-Method-Override" : "PUT"},
                         data:JSON.stringify({
-                           bsr_content:bsr_content,
-                           hm_empnum:n_hm_empnum}),
+		                           bsr_content:bsr_content,
+		                           hm_empnum:n_hm_empnum}),
                         dataType:'text',
                         success:function(result){
                            console.log("result: " + result);
@@ -206,7 +205,7 @@
          del_input.addClass("delete_btn");
          
          //조립하기
-         if(hm_empnum == n_hm_empnum){
+         if(hm_empnum == n_hm_empnum|| hm_empnum =="H000000000000"){
         	 //내가 쓴 댓글일 경우
         	 new_li.attr("style", "background-color:Seashell");
              writer_p.append(rownum_span).append(date_span).append(up_input).append(del_input)

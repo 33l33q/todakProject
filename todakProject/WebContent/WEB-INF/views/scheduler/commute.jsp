@@ -57,6 +57,20 @@
 	 			$("#commuteIndex").submit();
 			});
 
+<%
+			String message = (String)request.getAttribute("message");
+			if(message == null){
+%>
+			function commuteBase() {
+
+					$("#commuteIndex").attr("action","../scheduler/timeTest.td").submit();
+			}
+			
+			setTimeout(commuteBase);
+			
+<%
+			}
+%>
 		});
 		
 		</script>
