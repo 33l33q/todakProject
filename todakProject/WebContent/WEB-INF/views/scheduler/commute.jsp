@@ -34,6 +34,17 @@
 			
 			console.log("출퇴근 버튼!");
 			
+			$("#batch").click(function(){
+				console.log("서버에 해당 코드 올리기 이동하기");
+				$("#commuteIndex").attr({
+	 				"method":"post",
+	 				"action":"../scheduler/timeTest.td",
+	 				"target" : "pop"
+	 			});
+	 			$("#commuteIndex").submit();
+			});
+			
+			
 			$("#goWork").click(function(){
 				console.log("출근창으로 이동하기");
 				
@@ -56,21 +67,6 @@
 	 			});
 	 			$("#commuteIndex").submit();
 			});
-
-<%
-			String message = (String)request.getAttribute("message");
-			if(message == null){
-%>
-			function commuteBase() {
-
-					$("#commuteIndex").attr("action","../scheduler/timeTest.td").submit();
-			}
-			
-			setTimeout(commuteBase);
-			
-<%
-			}
-%>
 		});
 		
 		</script>
@@ -87,6 +83,7 @@
 					<tr>
 						<td><input type="button" id="goWork" name="goWork" value="출근" class="button" style="width:74px;height:30px;"></td>
 						<td><input type="button" id="goHome" name="goHome" value="퇴근" class="button" style="width:74px;height:30px;"></td>
+						<td><input type="button" id="batch" name="batch" value="출퇴근 정보 넣기" class="button" style="width:74px;height:30px;"></td>
 					</tr>
 				</table>
 			</form>

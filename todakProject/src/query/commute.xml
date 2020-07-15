@@ -12,10 +12,10 @@
 			     ,B.HM_DEPTNUM
 			     ,B.HC_TANDA
 		)SELECT  (
-				'C'||TO_CHAR(SYSDATE,'YYYYMMDD')||SUBSTR(A.HM_EMPNUM, -4,4))
-		        ,A.HM_EMPNUM
-		        ,A.HM_NAME
-		        ,TO_CHAR(SYSDATE,'YYYYMMDD')
+				'C'||TO_CHAR(SYSDATE,'YYYYMMDD')||SUBSTR(A.HM_EMPNUM, -4,4)) -- 전체 직원의 출근채번
+		        ,A.HM_EMPNUM												 -- 전체 직원의 사원번호
+		        ,A.HM_NAME													 -- 전체 직원의 이름
+		        ,TO_CHAR(SYSDATE,'YYYYMMDD')								 -- 해당 날짜
 		        ,A.HM_DEPTNUM
 		        ,'70'
 		FROM  	HUMAN_MEMBER A

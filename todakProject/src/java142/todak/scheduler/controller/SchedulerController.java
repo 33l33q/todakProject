@@ -68,40 +68,71 @@ public class SchedulerController {
 	//자동으로 출퇴근 기본정보가 저장
 	@RequestMapping(value="/timeTest")
 	public String boardTask(@ModelAttribute CommuteVO cvo, Model model){
+		
 		logger.info("(log)boardTask 진입 ");
-		String message = "timeTest 다녀온다";
+		
 		System.out.println("boardTask");
 		
 		Calendar date = Calendar.getInstance();
-		date.set(Calendar.HOUR_OF_DAY, 24);
-		date.set(Calendar.MINUTE, 12);
-		date.set(Calendar.SECOND, 31);
+		date.set(Calendar.HOUR_OF_DAY, 16);
+		date.set(Calendar.MINUTE, 52);
+		date.set(Calendar.SECOND, 35);
 		date.set(Calendar.MILLISECOND, 0);
 		
 		Timer timer = new Timer(false);
 		timer.schedule(new TimerCommuteTask(cvo), date.getTime(), 1000*60*60*24);
 
-		model.addAttribute("message", message);
 		
 		logger.info("(log)boardTask 종료, 메인페이지로 돌아가기");
-		return "/scheduler/commute";
+		return "redirect:/scheduler/selectSchedule.td";
 	}
 	
 	class TimerCommuteTask extends TimerTask{ 
 		
 		CommuteVO cvo = null;
 		boolean insertTAndAResult = false;
+		
 		TimerCommuteTask(CommuteVO cvo){
-			this.cvo = cvo;
+		
+			this.cvo = cvo; 
+		
 		}
 		
 		@Override
 		public void run() {
 			
 			System.out.println("Time Task !");
+			String message = "";
+	      
+			String hc_lasthour = ""; 
+			String hc_totalhour = "";
+			String hc_extraworking = "";
+	      
+			/*주 5일를 기준으로한 한주의 총근 무 시간*/
+			hc_lasthour = "2400"; //남은시간
+			hc_totalhour = "2400"; //한 주 총 근무 시간
+	      
+			//날짜 불러오기 -> 월요일일때와 다른 요일일때 들어가는 정보값이 다르기 때문에
+			Calendar cd = Calendar.getInstance();
+			int today = cd.get(Calendar.DAY_OF_WEEK);
+			logger.info("today >>> " + today); 
+		      
 		     try{
-		    	 	insertTAndAResult = schedulerService.insertTAndA(cvo);
+		    	 //default값 배치 함수로 넣어주기
+		    	 logger.info("전체데이터넣는중");
+		    	 
+		         List<CommuteVO> cheabunList = null;
+		         cheabunList = schedulerService.selectCheabun(cvo);
+		         
+		         if(cheabunList.size() == 0){
+			    	 cvo.setToday(today);
+			    	 cvo.setHc_lasthour(hc_lasthour);
+			    	 cvo.setHc_totalhour(hc_totalhour);
+			    	 insertTAndAResult = schedulerService.insertTAndA(cvo);
+		         }
+		         
 		     }catch(Exception e){
+		    	 e.printStackTrace();
 		    	 
 		     };
 		     	System.out.println(">>> : " + insertTAndAResult );
@@ -121,7 +152,7 @@ public class SchedulerController {
       String hc_totalhour = "";
       String hc_extraworking = "";
       
-      /*주 5일를 기준으로한 한주의 총근 무 시간*/
+      /*주 5일를 기준으로한 한주의 총 근무 시간*/
       hc_lasthour = "2400"; //남은시간
       hc_totalhour = "2400"; //한 주 총 근무 시간
       
@@ -144,49 +175,43 @@ public class SchedulerController {
          List<CommuteVO> cheabunList = null;
          cheabunList = schedulerService.selectCheabun(cvo);//채번
          
-         if(cheabunList.size() == 0){
-            //default값 배치 함수로 넣어주기
-            logger.info("전체데이터넣는중");
-            cvo.setToday(today);
-            cvo.setHc_lasthour(hc_lasthour);
-            cvo.setHc_totalhour(hc_totalhour);
-            insertTAndAResult = schedulerService.insertTAndA(cvo);
-            cheabunList = schedulerService.selectCheabun(cvo);
-         }
-      
          String hc_comnum = cheabunList.get(0).getHc_comnum();
          cvo.setHc_comnum(hc_comnum);
    
-         if(today != 2){
+         if(today != 4){
             logger.info("월요일이 아닌경우, 이전 남은시간 가져오기");
             List<CommuteVO> beforeHourList = null;
             beforeHourList = schedulerService.selectLastHour(cvo);
-               if(beforeHourList.get(0) != null ){
-                  //전날의 총 근무시간, 남은 근무시간, 추가 근무시간 가져옴
-                  hc_lasthour = beforeHourList.get(0).getHc_lasthour();
-                  hc_totalhour = beforeHourList.get(0).getHc_totalhour();
-                  hc_extraworking = beforeHourList.get(0).getHc_extraworking();
-                  logger.info(hc_lasthour +hc_totalhour +hc_extraworking);
-                  
-                  cvo.setHc_lasthour(hc_lasthour);
-                  cvo.setHc_totalhour(hc_totalhour);
-                  cvo.setHc_extraworking(hc_extraworking);
                
-                  insertLastHourResult = schedulerService.insertLastHour(cvo);
-         
-               }else{
-                  message = "지난 출근기록이 존재하지 않습니다. 관리자에게 문의하세요";
-                  model.addAttribute("message", message);
-                  return "scheduler/goWork";
-               }
-               
-            }else{
-            	logger.info("월요일인 경우 값 넣어주기");
-               cvo.setHc_lasthour(hc_lasthour);
-               cvo.setHc_totalhour(hc_totalhour);
-               cvo.setHc_extraworking("0");
             
+            if(beforeHourList.get(0) != null ){
+            	//전날의 총 근무시간, 남은 근무시간, 추가 근무시간 가져옴
+				hc_lasthour = beforeHourList.get(0).getHc_lasthour();
+				hc_totalhour = beforeHourList.get(0).getHc_totalhour();
+				hc_extraworking = beforeHourList.get(0).getHc_extraworking();
+				    	
+				logger.info(hc_lasthour +hc_totalhour +hc_extraworking);
+				          
+				cvo.setHc_lasthour(hc_lasthour);
+				cvo.setHc_totalhour(hc_totalhour);
+				cvo.setHc_extraworking(hc_extraworking);
+				       
+				insertLastHourResult = schedulerService.insertLastHour(cvo);
+				
+            }else{
+            	
+            	message = "지난 출근기록이 존재하지 않습니다. 관리자에게 문의하세요";
+            	model.addAttribute("message", message);
+            	return "scheduler/goWork";
             }
+               
+        }else{
+        	logger.info("월요일인 경우 값 넣어주기");
+           cvo.setHc_lasthour(hc_lasthour);
+           cvo.setHc_totalhour(hc_totalhour);
+           cvo.setHc_extraworking("0");
+        
+        }
          
          insertCommuteResult = schedulerService.insertCommute(cvo);
    
