@@ -27,9 +27,8 @@
     <select id="selectCheabun" parameterType="cvo" resultType="cvo">
 		SELECT HC_COMNUM
 		FROM   HUMAN_COMMUTE
-		WHERE  HM_EMPNUM 	= #{hm_empnum}
-		AND    HC_DATE		= TO_CHAR(SYSDATE,'YYYYMMDD')
-   
+		WHERE  HM_EMPNUM 	= #{hm_empnum, jdbcType=VARCHAR}
+		AND    HC_DATE		= TO_CHAR(SYSDATE ,'YYYYMMDD')
    </select>
    
    <!-- 가장 최근날의 정보를 불러오는 쿼리 -->
@@ -39,8 +38,8 @@
 		   		,NVL(HC_EXTRAWORKING, 0)	   	HC_EXTRAWORKING
 		FROM ( SELECT *
 		       FROM  HUMAN_COMMUTE
-		       WHERE HM_EMPNUM = #{hm_empnum}
-		       AND	 HC_DATE != TO_CHAR(SYSDATE  ,'YYYYMMDD')	
+		       WHERE HM_EMPNUM = #{hm_empnum, jdbcType=VARCHAR}
+		       AND	 HC_DATE != TO_CHAR(SYSDATE ,'YYYYMMDD')	
 		       AND   HC_LASTHOUR IS NOT NULL
 		       ORDER BY HC_DATE DESC)
 		WHERE  ROWNUM = 1
@@ -51,11 +50,11 @@
    		UPDATE HUMAN_COMMUTE A
 		SET    A.HC_TANDA = '71'
 		      ,A.HC_WORKIN = TO_CHAR(SYSDATE  , 'HH24MI')	
-		      ,A.HC_TOTALHOUR = #{hc_totalhour}
-		      ,A.HC_LASTHOUR = #{hc_lasthour}
+		      ,A.HC_TOTALHOUR = #{hc_totalhour, jdbcType=VARCHAR}
+		      ,A.HC_LASTHOUR = #{hc_lasthour, jdbcType=VARCHAR}
 		
-		WHERE  A.HM_EMPNUM = #{hm_empnum}
-		AND    A.HC_COMNUM = #{hc_comnum}
+		WHERE  A.HM_EMPNUM = #{hm_empnum, jdbcType=VARCHAR}
+		AND    A.HC_COMNUM = #{hc_comnum, jdbcType=VARCHAR}
 		AND    A.HC_TANDA = '70'
 		AND    A.HC_WORKIN IS NULL
    </update>
@@ -64,32 +63,32 @@
     <update id="insertExtrawork" parameterType="cvo">
    
       UPDATE HUMAN_COMMUTE A
-      SET    A.HC_LASTHOUR = #{hc_lasthour}
+      SET    A.HC_LASTHOUR = #{hc_lasthour, jdbcType=VARCHAR}
       <if test = "hc_extraworking != null">
-            ,A.HC_EXTRAWORKING = #{hc_extraworking}
+            ,A.HC_EXTRAWORKING = #{hc_extraworking, jdbcType=VARCHAR}
       </if>
       <if test = "hc_weekhour != null ">
-             ,A.HC_WEEKHOUR = #{hc_weekhour}
+             ,A.HC_WEEKHOUR = #{hc_weekhour, jdbcType=VARCHAR}
       </if>
       <if test = "hc_totalhour != null">
-             ,A.HC_TOTALHOUR = #{hc_totalhour}
+             ,A.HC_TOTALHOUR = #{hc_totalhour, jdbcType=VARCHAR}
       </if>
       <if test = "hc_dayhour != null">
-            ,A.HC_DAYHOUR = #{hc_dayhour}
+            ,A.HC_DAYHOUR = #{hc_dayhour, jdbcType=VARCHAR}
       </if>
-       WHERE  A.HM_EMPNUM = #{hm_empnum}
-       AND    A.HC_COMNUM = #{hc_comnum}
+       WHERE  A.HM_EMPNUM = #{hm_empnum, jdbcType=VARCHAR}
+       AND    A.HC_COMNUM = #{hc_comnum, jdbcType=VARCHAR}
    </update>
    
    
      <!-- 지난 토탈시간을 가져오는 쿼리 -->
      <update id="insertLastHour" parameterType="cvo">
        UPDATE HUMAN_COMMUTE A
-       SET     A.HC_LASTHOUR = #{hc_lasthour}
-              ,A.HC_TOTALHOUR = #{hc_totalhour}
-              ,A.HC_EXTRAWORKING = #{hc_extraworking}
-       WHERE  A.HM_EMPNUM = #{hm_empnum}
-       AND    A.HC_COMNUM = #{hc_comnum}
+       SET     A.HC_LASTHOUR = #{hc_lasthour, jdbcType=VARCHAR}
+              ,A.HC_TOTALHOUR = #{hc_totalhour, jdbcType=VARCHAR}
+              ,A.HC_EXTRAWORKING = #{hc_extraworking, jdbcType=VARCHAR}
+       WHERE  A.HM_EMPNUM = #{hm_empnum, jdbcType=VARCHAR}
+       AND    A.HC_COMNUM = #{hc_comnum, jdbcType=VARCHAR}
    </update>
    
    <!-- jsp로 해당 직원의 출근 정보를 출력하는 테이블 -->
@@ -108,27 +107,29 @@
                ,TO_DATE(A.HC_WORKOUT, 'HH24:MI')  HC_WORKOUT
       FROM      HUMAN_COMMUTE A, CODE B
       WHERE     B.CD_CODE IN (SELECT SUBSTR(A.HM_DEPTNUM ,-2,2) FROM HUMAN_COMMUTE)
-      AND       HC_COMNUM = #{hc_comnum}
+      AND       HC_COMNUM = #{hc_comnum, jdbcType=VARCHAR}
    </select>
 
    
    <!-- 퇴근 버튼 클릭시 정보가 입력되는 테이블 -->
    <update id="updateCommute"  parameterType="cvo">
-       UPDATE HUMAN_COMMUTE A
-       SET    A.HC_WORKOUT =  TO_CHAR(SYSDATE , 'HH24MI')
-             ,A.HC_DAYHOUR = (SELECT TRUNC(ABS(TO_DATE(TO_CHAR(TRUNC(SYSDATE , 'MI'),'HH24MI'),'HH24MI') - TO_DATE( B.HC_WORKIN,'HH24MI')) *24*60,2) 
-                               FROM HUMAN_COMMUTE B
-                               WHERE B.HC_COMNUM = #{hc_comnum})
-             ,A.HC_LASTHOUR = (SELECT C.HC_LASTHOUR - 
-                                                  (SELECT TRUNC(ABS(TO_DATE(TO_CHAR(TRUNC(SYSDATE , 'MI'),'HH24MI'),'HH24MI') - TO_DATE( B.HC_WORKIN,'HH24MI')) *24*60,2) 
-                                                   FROM HUMAN_COMMUTE B
-                                                   WHERE B.HC_COMNUM = #{HC_COMNUM})                                                
-                               FROM HUMAN_COMMUTE C
-                               WHERE C.HC_COMNUM = ('C'||TO_CHAR(SYSDATE ,'YYYYMMDD')||SUBSTR(A.HM_EMPNUM ,-4,4)))
+   
+       update human_commute A
+       set    A.hc_workout =  to_char(SYSDATE, 'HH24MI')
+             ,A.hc_dayhour = (select TRUNC(ABS(to_date(TO_CHAR(TRUNC(SYSDATE, 'MI'),'HH24MI'),'HH24MI') - to_date( B.hc_workin,'HH24MI')) *24*60,2) 
+                               from human_commute B
+                               WHERE B.hc_comnum = #{hc_comnum})
+             ,A.hc_lasthour = (select C.hc_lasthour - 
+                                                  (select TRUNC(ABS(to_date(TO_CHAR(TRUNC(SYSDATE , 'MI'),'HH24MI'),'HH24MI') - to_date( B.hc_workin,'HH24MI')) *24*60,2) 
+                                                   from human_commute B
+                                                   WHERE B.hc_comnum = #{hc_comnum})                                                
+                               from human_commute C
+                               WHERE C.hc_comnum = ('C'||to_char(SYSDATE ,'YYYYMMDD')||SUBSTR(A.HM_EMPNUM ,-4,4)))
                                
-       WHERE  A.HM_EMPNUM = #{hm_empnum}
+       where  A.hm_empnum = #{hm_empnum}
        and    A.hc_comnum = #{hc_comnum}
        and    A.HC_TANDA = '71'
+
    </update>
    
 </mapper>

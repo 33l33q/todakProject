@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import java142.todak.common.ChaebunUtils;
 import java142.todak.common.VOPrintUtil;
 import java142.todak.etc.utils.LoginSession;
@@ -32,6 +33,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import sun.rmi.runtime.Log;
 
 
 @Controller
@@ -66,17 +69,18 @@ public class SchedulerController {
 	
 	
 	//자동으로 출퇴근 기본정보가 저장
-	@RequestMapping(value="/timeTest")
+	//서버가 돌아가는 한 매일 새벽 6시에 모든 사원의 출근 기본값들이 배치코드에 따라서 한번에 입력됨
+	@RequestMapping(value="/defaultOnServer")
 	public String boardTask(@ModelAttribute CommuteVO cvo, Model model){
 		
-		logger.info("(log)boardTask 진입 ");
+		logger.info("(log)defaultOnServer 진입 ");
 		
-		System.out.println("boardTask");
+		System.out.println("defaultOnServer");
 		
 		Calendar date = Calendar.getInstance();
-		date.set(Calendar.HOUR_OF_DAY, 16);
-		date.set(Calendar.MINUTE, 52);
-		date.set(Calendar.SECOND, 35);
+		date.set(Calendar.HOUR_OF_DAY, 06);
+		date.set(Calendar.MINUTE, 00);
+		date.set(Calendar.SECOND, 00);
 		date.set(Calendar.MILLISECOND, 0);
 		
 		Timer timer = new Timer(false);
@@ -84,7 +88,7 @@ public class SchedulerController {
 
 		
 		logger.info("(log)boardTask 종료, 메인페이지로 돌아가기");
-		return "redirect:/scheduler/selectSchedule.td";
+		return "/scheduler/goWork";
 	}
 	
 	class TimerCommuteTask extends TimerTask{ 
@@ -100,17 +104,15 @@ public class SchedulerController {
 		
 		@Override
 		public void run() {
-			
+
 			System.out.println("Time Task !");
-			String message = "";
 	      
 			String hc_lasthour = ""; 
 			String hc_totalhour = "";
-			String hc_extraworking = "";
 	      
 			/*주 5일를 기준으로한 한주의 총근 무 시간*/
-			hc_lasthour = "2400"; //남은시간
-			hc_totalhour = "2400"; //한 주 총 근무 시간
+			hc_lasthour = "0"; //남은시간
+			hc_totalhour = "0"; //한 주 총 근무 시간
 	      
 			//날짜 불러오기 -> 월요일일때와 다른 요일일때 들어가는 정보값이 다르기 때문에
 			Calendar cd = Calendar.getInstance();
@@ -120,16 +122,16 @@ public class SchedulerController {
 		     try{
 		    	 //default값 배치 함수로 넣어주기
 		    	 logger.info("전체데이터넣는중");
-		    	 
-		         List<CommuteVO> cheabunList = null;
-		         cheabunList = schedulerService.selectCheabun(cvo);
-		         
-		         if(cheabunList.size() == 0){
+//		    	 
+//		         List<CommuteVO> cheabunList = null;
+//		         cheabunList = schedulerService.selectCheabun(cvo);
+//		         
+//		         if(cheabunList.size() == 0){
 			    	 cvo.setToday(today);
 			    	 cvo.setHc_lasthour(hc_lasthour);
 			    	 cvo.setHc_totalhour(hc_totalhour);
 			    	 insertTAndAResult = schedulerService.insertTAndA(cvo);
-		         }
+//		         }
 		         
 		     }catch(Exception e){
 		    	 e.printStackTrace();
@@ -160,6 +162,7 @@ public class SchedulerController {
       Calendar cd = Calendar.getInstance();
       int today = cd.get(Calendar.DAY_OF_WEEK);
       logger.info("today >>> " + today); 
+
       
       //트랜젝션처리
       boolean insertTAndAResult = false;
@@ -173,12 +176,15 @@ public class SchedulerController {
       try{
          
          List<CommuteVO> cheabunList = null;
+         
+         logger.info("회원번호,,,>>" + cvo.getHm_empnum());
+         
          cheabunList = schedulerService.selectCheabun(cvo);//채번
          
          String hc_comnum = cheabunList.get(0).getHc_comnum();
          cvo.setHc_comnum(hc_comnum);
    
-         if(today != 4){
+         if(today != 2){
             logger.info("월요일이 아닌경우, 이전 남은시간 가져오기");
             List<CommuteVO> beforeHourList = null;
             beforeHourList = schedulerService.selectLastHour(cvo);
@@ -253,7 +259,7 @@ public class SchedulerController {
 		List<CommuteVO> cheabunList = null;
 		cheabunList = schedulerService.selectCheabun(cvo);			
 		String hc_comnum = cheabunList.get(0).getHc_comnum();
-		if(hc_comnum  != null){
+		if(hc_comnum != null){
 			cvo.setHc_comnum(hc_comnum);
 	
 			boolean updateCommuteResult = false;
@@ -280,7 +286,7 @@ public class SchedulerController {
 					logger.info("오늘 근무한 시간 확인하기~~~ >> todayWorkHour" + todayWorkHour);
 		
 					//월요일이 아닌경우에만~! --> 월요일은 지난 초과근무시간이 존재하지 않기 때문에
-					if(today != 2){
+					if(today != 2 ){
 					
 						//어제까지의 초과근무시간 구해오기
 						int beforeExtraworking = 0;

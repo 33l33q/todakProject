@@ -14,7 +14,7 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
       <title>댓글</title>
       <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-      <script   type="text/javascript">
+      <script type="text/javascript">
 	  $(document).ready(function(){
         /*기본 덧글 목록 불러오가*/
          var bs_num = $("#bs_num").val();

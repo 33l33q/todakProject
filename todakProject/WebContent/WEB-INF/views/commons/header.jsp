@@ -31,15 +31,6 @@
 				if ( (location.pathname.indexOf('scheduler') || location.pathname.indexOf('login')) != -1) {
 					  $('.schedulerMenu').addClass('active');
 					}
-				if (location.pathname.indexOf('human') != -1) {
-					  $('.humanMenu').addClass('active');
-					}
-				if (location.pathname.indexOf('ework') != -1) {
-					  $('.eworkMenu').addClass('active');
-					}
-				if (location.pathname.indexOf('sponsor') != -1) {
-					  $('.sponsorMenu').addClass('active');
-					}
 				if (location.pathname.indexOf('board') != -1) {
 					  $('.boardMenu').addClass('active');
 				}

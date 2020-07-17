@@ -23,8 +23,6 @@
 	
 	    <link rel="stylesheet" href="/include/js/scheduler/main.css" >
 	    
-	    
-	    
 	    <link rel="stylesheet" type="text/css" href="/include/css/default.css"/>
 	
 	</head>
@@ -64,6 +62,17 @@
 	            			success : whenSuccess,
 	            			error : whenError
 	            		});
+	            		
+	        			$("#batch").click(function(){
+	        				console.log("서버에 해당 코드 올리기 이동하기");
+	        				$("#commuteIndex").attr({
+	        	 				"method":"post",
+	        	 				"action":"../scheduler/defaultOnServer.td",
+	        	 				"target" : "pop"
+	        	 			});
+	        	 			$("#commuteIndex").submit();
+	        			});
+	        			
 	            	});
 	            	
 	            	function whenSuccess(data) { 
@@ -90,12 +99,22 @@
 	            	
 	            </script>
 	            	
-	                             안녕하세요, <span id="name"></span>님!
+<%
+				if(hm_empnum.equals("H00000000")){
+%>
+				<td><input type="button" id="batch" name="batch" value="출퇴근 정보 넣기" class="button" style="width:160px;height:30px;"></td>
+				
+<%
+				}else{
+
+%>
+	            	                             안녕하세요, <span id="name"></span>님!
 	           	<br><br>
 	            <img id="picture" alt="이미지 없음" src="" 
 	            	 width="150px" height="150px"
 	            	 style="border-radius:70%"/>
 	            <br><br>
+	            
 	            <%@ include file="/WEB-INF/views/scheduler/commute.jsp"%> <!-- jsp에 있는 bindSession 주석 처리 했음 -->
 	            <button type="button" id="ReferenceButton" onclick="moveReference()" class="button" style="width:152px;height:30px;">내 정보</button>
             
@@ -103,7 +122,9 @@
          	
          </aside>
          <div class="context-container" >
-	 
+<%
+				}
+%>	 
 	    <div>
 	    
 	     <!-- Trigger the modal with a button -->
