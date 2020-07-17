@@ -1,5 +1,7 @@
 ﻿# 프로젝트명 : **TodakTodak Project**
- Spring Framework를 기반으로 한 web기반 그룹웨어
+ 
+ ### Spring Framework를 기반으로 한 web기반 그룹웨어
+ https://drive.google.com/file/d/1UhGlgEgccimP44y9osmYl56hUE_Phl-h/view?usp=sharing
 
 ## 1.요건정리
  - 목적 : 주 52시간 탄력근무제를 기반으로한 단체를 대상으로 한 그룹웨어 제작 
@@ -23,10 +25,11 @@
       9주차	|	CSS 작업 및 프로젝트 발표 문서 작업	|
 
 
->ERD
+### ERD
 ![erd](https://user-images.githubusercontent.com/62315622/84861319-b7563d80-b0ab-11ea-9bd2-f81b7a11dc53.PNG)
 
-> 테이블 정의서
+
+### 테이블 정의서
 - 메인테이블 
 
 HUMAN_MEMBER	사원인사정보 테이블					
@@ -158,22 +161,22 @@ BSL_DISLIKEYN		|	VARCHAR2(1 BYTE )		|	건의사항싫어요여부
 
 
 
->시스템 아키텍쳐
+### 시스템 아키텍쳐
 ![systemArchitecture](https://user-images.githubusercontent.com/62315622/84861320-b7563d80-b0ab-11ea-8250-3652e8384f39.PNG)
 
-## 2. 개발환경 : HTML5, CSS3, jQuery, Ajax, JavaScript(ECMAScript3), BootStrap4, jsp-api 2.0, Servlet api 3.2, JDK 1.7, Spring framework 3,Mybatis 3, Mybatis-spring 1.2, Oracle11g R 2 (AWS EC R2), 파일업로드 api – cos.jar, Log4j 1.2, xml, plain-text, eclipse luna, Apache Tomcat 8.0, SQL Developer, STS, Erdwin, Git Bash, GitHub, StarUML, AWS, Smart-editor v2
-
-![developmentEnvironment](https://user-images.githubusercontent.com/62315622/84861317-b6bda700-b0ab-11ea-93ea-0b6934662a2d.PNG)
+## 2. 개발환경 : HTML5, CSS3, jQuery, Ajax, JavaScript(ECMAScript3), BootStrap4, jsp-api 2.0, Servlet api 3.2, JDK 1.7, Spring framework 3,Mybatis 3, Mybatis-spring 1.2, Oracle11g R 2 (AWS EC R2), 파일업로드 api – cos.jar, Log4j 1.2, xml, plain-text, json, eclipse luna, Apache Tomcat 8.0, SQL Developer, STS, Erdwin, Git Bash, GitHub, StarUML, AWS, Smart-editor v2
 
 ## 3. 실행화면
 
-![실행화면1](https://user-images.githubusercontent.com/62315622/86369720-cd721980-bcb9-11ea-90fd-04ae7223e1a9.PNG)
-![실행화면2](https://user-images.githubusercontent.com/62315622/86369724-ce0ab000-bcb9-11ea-93a1-d82ab46aa4b5.PNG)
-![실행화면3](https://user-images.githubusercontent.com/62315622/86369727-cea34680-bcb9-11ea-9588-7dcf367f5419.PNG)
-![실행화면4](https://user-images.githubusercontent.com/62315622/86369730-cf3bdd00-bcb9-11ea-9313-7417a6505f68.PNG)
-![실행화면5](https://user-images.githubusercontent.com/62315622/86369733-cf3bdd00-bcb9-11ea-8e1e-110c7f3a03a7.PNG)
-![실행화면6](https://user-images.githubusercontent.com/62315622/86370104-407b9000-bcba-11ea-9b34-c82ec854537e.png)
-![실행화면7](https://user-images.githubusercontent.com/62315622/86369715-cb0fbf80-bcb9-11ea-906f-78a72ae51f8d.PNG)
-![실행화면8](https://user-images.githubusercontent.com/62315622/86466431-901b9380-bd6e-11ea-9eb9-1684bad47ce0.png)
-![실행화면9](https://user-images.githubusercontent.com/62315622/86466428-8eea6680-bd6e-11ea-904c-0d60e4f61698.png)
+![실행화면8](https://user-images.githubusercontent.com/62315622/87771975-0c78a100-c85c-11ea-9550-bf858343abde.PNG)
+![실행화면9](https://user-images.githubusercontent.com/62315622/87771953-07b3ed00-c85c-11ea-9ca5-91db8502de4a.PNG)
+![실행화면10](https://user-images.githubusercontent.com/62315622/87771957-097db080-c85c-11ea-81bb-9ec53e84d669.PNG)
+![실행화면11](https://user-images.githubusercontent.com/62315622/87771959-0a164700-c85c-11ea-8005-18fd3ddd61a8.PNG)
+![실행화면12](https://user-images.githubusercontent.com/62315622/87771964-0aaedd80-c85c-11ea-847c-15f7a8387fb2.PNG)
+![실행화면13](https://user-images.githubusercontent.com/62315622/87771967-0b477400-c85c-11ea-8ae8-4da00c008b76.PNG)
+![실행화면14](https://user-images.githubusercontent.com/62315622/87771969-0b477400-c85c-11ea-9501-8bd996ebcfe4.PNG)
+![실행화면15](https://user-images.githubusercontent.com/62315622/87771972-0be00a80-c85c-11ea-8fc0-b6c5a057b16f.PNG)
+
+
+
 
